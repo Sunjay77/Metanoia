@@ -1,10 +1,11 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface Todo {
   id: number;
   title: string;
   completed: boolean;
-  createdAt: Date;
+  createdAt: string; // Store as string for JSON serialization
 }
 
 interface TodoStore {
@@ -15,34 +16,41 @@ interface TodoStore {
   clearCompleted: () => void;
 }
 
-export const useTodoStore = create<TodoStore>((set) => ({
-  todos: [],
+export const useTodoStore = create<TodoStore>()(
+  persist(
+    (set) => ({
+      todos: [],
 
-  addTodo: (title: string) =>
-    set((state) => {
-      const newTodo: Todo = {
-        id: Date.now(),
-        title,
-        completed: false,
-        createdAt: new Date(),
-      };
-      return { todos: [...state.todos, newTodo] };
+      addTodo: (title: string) =>
+        set((state) => {
+          const newTodo: Todo = {
+            id: Date.now(),
+            title,
+            completed: false,
+            createdAt: new Date().toISOString(),
+          };
+          return { todos: [...state.todos, newTodo] };
+        }),
+
+      removeTodo: (id: number) =>
+        set((state) => ({
+          todos: state.todos.filter((todo) => todo.id !== id),
+        })),
+
+      toggleTodo: (id: number) =>
+        set((state) => ({
+          todos: state.todos.map((todo) =>
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+          ),
+        })),
+
+      clearCompleted: () =>
+        set((state) => ({
+          todos: state.todos.filter((todo) => !todo.completed),
+        })),
     }),
-
-  removeTodo: (id: number) =>
-    set((state) => ({
-      todos: state.todos.filter((todo) => todo.id !== id),
-    })),
-
-  toggleTodo: (id: number) =>
-    set((state) => ({
-      todos: state.todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    })),
-
-  clearCompleted: () =>
-    set((state) => ({
-      todos: state.todos.filter((todo) => !todo.completed),
-    })),
-}));
+    {
+      name: "todo-store", // localStorage key
+    }
+  )
+);
