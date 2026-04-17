@@ -6,11 +6,12 @@ export function TodoList() {
   const clearCompleted = useTodoStore((state) => state.clearCompleted);
 
   const completedCount = todos.filter((todo) => todo.completed).length;
+  const remainingCount = todos.length - completedCount;
 
   return (
     <div className="todo-list-container">
       {todos.length === 0 ? (
-        <p className="empty-message">No todos yet. Add one to get started!</p>
+        <p className="empty-message">✨ No todos yet. Time to add something!</p>
       ) : (
         <>
           <ul className="todo-list">
@@ -20,7 +21,8 @@ export function TodoList() {
           </ul>
           <div className="todo-footer">
             <span className="todo-count">
-              {todos.length - completedCount} of {todos.length} completed
+              {remainingCount} {remainingCount === 1 ? "task" : "tasks"}{" "}
+              remaining
             </span>
             {completedCount > 0 && (
               <button onClick={clearCompleted} className="clear-button">
