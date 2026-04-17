@@ -7,6 +7,7 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>Metonia</h1>
+        <p>Keep track of what matters</p>
       </header>
       <main className="app-main">
         <TodoInput />
