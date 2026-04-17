@@ -39,12 +39,16 @@
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.5px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
 .app-header p {
   font-size: 0.95rem;
   margin: 0.75rem 0 0 0;
   color: var(--text-secondary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
 .app-main {
@@ -62,13 +66,15 @@
 .todo-input {
   flex: 1;
   padding: 0.875rem 1.25rem;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  border-radius: 0;
   font-size: 1rem;
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
   transition: var(--transition);
-  font-family: inherit;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .todo-input::placeholder {
@@ -76,13 +82,12 @@
 }
 
 .todo-input:hover {
-  border-color: var(--primary-light);
+  border-bottom-color: var(--primary-light);
 }
 
 .todo-input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-bottom-color: var(--primary);
 }
 
 .add-button {
@@ -122,7 +127,7 @@
   border-radius: 12px;
   padding: 1.75rem;
   box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border);
+  border: none;
 }
 
 .empty-message {
@@ -151,7 +156,7 @@
   background: var(--bg-secondary);
   border-radius: 10px;
   transition: var(--transition);
-  border: 1px solid var(--border);
+  border: none;
 }
 
 .todo-item:hover {
