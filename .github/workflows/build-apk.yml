@@ -25,6 +25,17 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Verify build tools
+        run: |
+          echo "Java version:"
+          java -version
+          echo ""
+          echo "Gradle version:"
+          gradle --version || echo "Gradle not in PATH"
+          echo ""
+          echo "Android SDK location: $ANDROID_SDK_ROOT"
+          echo "Android Home: $ANDROID_HOME"
+
       - name: Install dependencies
         run: npm install
 
@@ -69,25 +80,36 @@ jobs:
       - name: Build APK
         run: |
           cd cordova-build
+          echo "Starting Cordova build..."
           cordova build android --release
+          echo "Build completed, checking for APK..."
+          ls -la platforms/android/app/build/outputs/apk/ || echo "No apk directory found"
+          find . -name "*.apk" -type f 2>/dev/null | head -20
 
       - name: Find APK and prepare for upload
         run: |
           echo "=== Looking for APK files ==="
-          find cordova-build/platforms/android -name "*.apk" -type f
+          APK_PATH=$(find cordova-build -name "*.apk" -type f 2>/dev/null | grep -E '(release|app).*\.apk$' | head -1)
 
-          # Copy unsigned APK to root with better name
-          if [ -f "cordova-build/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk" ]; then
-            cp cordova-build/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk Metanoia.apk
-            echo "✓ APK ready: Metanoia.apk"
+          if [ -z "$APK_PATH" ]; then
+            echo "❌ No APK found! Checking build directory structure..."
+            find cordova-build/platforms/android -type d | head -20
+            exit 1
           fi
+
+          echo "✓ Found APK at: $APK_PATH"
+          cp "$APK_PATH" Metanoia.apk
+          ls -lh Metanoia.apk
+          echo "✓ APK ready: Metanoia.apk"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Metanoia
           path: Metanoia.apk
-          if-no-files-found: warn
+          retention-days: 30
+          if-no-files-found: ignore
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
