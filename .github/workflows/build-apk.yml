@@ -1,0 +1,68 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Install Cordova globally
+        run: npm install -g cordova
+
+      - name: Create Cordova project
+        run: |
+          cd ..
+          rm -rf MetanoiaApp || true
+          cordova create MetanoiaApp com.metanoia.app Metanoia
+          cd MetanoiaApp
+
+      - name: Add Android platform
+        run: |
+          cd ../MetanoiaApp
+          cordova platform add android
+
+      - name: Copy built app to Cordova
+        run: |
+          rm -rf ../MetanoiaApp/www/* || true
+          cp -r dist/* ../MetanoiaApp/www/
+
+      - name: Build APK
+        run: |
+          cd ../MetanoiaApp
+          cordova build android --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: metanoia-app
+          path: ../MetanoiaApp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ../MetanoiaApp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
