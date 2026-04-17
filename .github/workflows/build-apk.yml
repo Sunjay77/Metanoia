@@ -80,8 +80,8 @@ jobs:
       - name: Build APK
         run: |
           cd cordova-build
-          echo "Starting Cordova build..."
-          cordova build android --release
+          echo "Starting Cordova APK build..."
+          cordova build android --release -- --packageType=apk
           echo "Build completed, checking for APK..."
           ls -la platforms/android/app/build/outputs/apk/ || echo "No apk directory found"
           find . -name "*.apk" -type f 2>/dev/null | head -20
@@ -89,14 +89,17 @@ jobs:
       - name: Find APK and prepare for upload
         run: |
           echo "=== Looking for APK files ==="
-          APK_PATH=$(find cordova-build -name "*.apk" -type f 2>/dev/null | grep -E '(release|app).*\.apk$' | head -1)
+          APK_PATH=$(find cordova-build/platforms/android -name "*release*.apk" -type f 2>/dev/null | grep -v unaligned | head -1)
 
           if [ -z "$APK_PATH" ]; then
-            echo "❌ No APK found! Checking build directory structure..."
-            find cordova-build/platforms/android -type d | head -20
-            exit 1
+            echo "❌ No APK found! Listing all build outputs..."
+            find cordova-build/platforms/android/app/build/outputs -type f 2>/dev/null | head -30
+            echo "Trying alternate search..."
+            APK_PATH=$(find cordova-build -name "*.apk" -type f 2>/dev/null | head -1)
           fi
 
+          if [ -z "$APK_PATH" ]; then
+            echo "❌ No APK found at all!"
           echo "✓ Found APK at: $APK_PATH"
           cp "$APK_PATH" Metanoia.apk
           ls -lh Metanoia.apk

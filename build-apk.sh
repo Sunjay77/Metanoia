@@ -68,7 +68,7 @@ echo ""
 
 # Step 6: Build APK
 echo -e "${BLUE}Step 6: Building APK (this may take 2-5 minutes)...${NC}"
-cordova build android --release
+cordova build android --release -- --packageType=apk
 echo -e "${GREEN}✓ APK built successfully!${NC}"
 echo ""
 
