@@ -67,13 +67,18 @@ echo -e "${GREEN}✓ App copied${NC}"
 echo ""
 
 # Step 6: Build APK
-echo -e "${BLUE}Step 6: Building APK (this may take 2-5 minutes)...${NC}"
-cordova build android --release -- --packageType=apk
+echo -e "${BLUE}Step 6: Building debug APK (no signing required)...${NC}"
+echo -e "${YELLOW}Note: Debug APK is unsigned and can be installed directly on any device${NC}"
+cordova build android
 echo -e "${GREEN}✓ APK built successfully!${NC}"
 echo ""
 
 # Step 7: Show APK location
-APK_PATH="platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk"
+APK_PATH=$(find platforms/android/app/build/outputs/apk -name "*.apk" -type f 2>/dev/null | grep -i debug | head -1)
+if [ -z "$APK_PATH" ]; then
+  APK_PATH=$(find platforms/android/app/build/outputs/apk -name "*.apk" -type f 2>/dev/null | head -1)
+fi
+
 if [ -f "$APK_PATH" ]; then
     # Copy and rename APK
     cp "$APK_PATH" "Metanoia.apk"
@@ -88,13 +93,16 @@ if [ -f "$APK_PATH" ]; then
     echo -e "${YELLOW}File Size:${NC}"
     du -h "Metanoia.apk"
     echo ""
-    echo -e "${YELLOW}Next Steps:${NC}"
+    echo -e "${YELLOW}Installation Instructions:${NC}"
     echo "1. Transfer APK to your Android device"
     echo "2. Enable 'Unknown Sources' in device settings"
     echo "3. Open file manager and install the APK"
     echo "4. Open 'Metanoia' app on your device"
+    echo ""
+    echo -e "${GREEN}✓ Your app is ready to install!${NC}"
 else
-    echo -e "${YELLOW}⚠️  APK file not found at expected location${NC}"
+    echo -e "${YELLOW}⚠️  APK file not found${NC}"
+    echo "Build output should be in: platforms/android/app/build/outputs/apk/"
     echo "Check the build output above for errors"
     exit 1
 fi
