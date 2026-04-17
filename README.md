@@ -1,74 +1,91 @@
+# Metanoia - Modern Minimal Todo App
 
-# React + TypeScript + Vite
+A beautiful, minimal todo application built with **React**, **TypeScript**, and **Vite**. Available on **Android** as a native app.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 
-Currently, two official plugins are available:
+## 🎯 About
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Metanoia** is a modern, distraction-free todo app that helps you keep track of what matters. Built with a focus on:
 
-## React Compiler
+- ✨ **Minimal Design** - Clean, focused interface
+- ⚡ **Performance** - Lightweight and responsive
+- 💾 **Offline First** - Works completely offline
+- 🎨 **Beautiful UI** - Indigo-themed professional design
+- 📱 **Mobile Ready** - Available as native Android app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Quick Start
 
-## Expanding the ESLint configuration
+### For Web (Development)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Start development server
+npm run dev
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### For Android
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+See [INSTALL.md](INSTALL.md) for detailed Android installation instructions.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📱 Download
+
+**Latest Release:** [v1.0.0](https://github.com/Sunjay77/Metanoia/releases/tag/v1.0.0)
+
+- Download `Metanoia.apk` from the releases page
+- Follow the [installation guide](INSTALL.md)
+
+## ✨ Features
+
+- ✅ Add, complete, and delete tasks
+- ✅ Auto-save to localStorage
+- ✅ Dark mode support
+- ✅ Responsive design (mobile & desktop)
+- ✅ No ads, no tracking, completely free
+- ✅ Works offline
+
+## 🛠️ Tech Stack
+
+| Technology        | Purpose          |
+| ----------------- | ---------------- |
+| **React 19**      | UI Framework     |
+| **TypeScript**    | Type Safety      |
+| **Vite**          | Build Tool       |
+| **Zustand**       | State Management |
+| **Cordova**       | Android Wrapper  |
+| **CSS Variables** | Theming          |
+
+## 📝 Available Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production
+npm run preview   # Preview production build
+npm run lint      # Run ESLint
+./build-apk.sh   # Build Android APK
 ```
+
+## 📖 Documentation
+
+- [Installation Guide](INSTALL.md)
+- [APK Building Guide](BUILD_APK.md)
+- [GitHub Releases](https://github.com/Sunjay77/Metanoia/releases)
+
+## 🐛 Report Issues
+
+- 🐛 [Report Issues](https://github.com/Sunjay77/Metanoia/issues)
+- 💡 [Suggest Features](https://github.com/Sunjay77/Metanoia/discussions)
+
+## 📄 License
+
+MIT License - Feel free to use this project for personal or commercial purposes.
+
+---
+
+**Made with ❤️ by Sunjay** | _Keep track of what matters._
