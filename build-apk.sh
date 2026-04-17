@@ -75,15 +75,18 @@ echo ""
 # Step 7: Show APK location
 APK_PATH="platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk"
 if [ -f "$APK_PATH" ]; then
+    # Copy and rename APK
+    cp "$APK_PATH" "Metanoia.apk"
+    
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo -e "${GREEN}✅ APK built successfully!${NC}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo -e "${YELLOW}APK Location:${NC}"
-    echo "$PWD/$APK_PATH"
+    echo "$PWD/Metanoia.apk"
     echo ""
     echo -e "${YELLOW}File Size:${NC}"
-    du -h "$APK_PATH"
+    du -h "Metanoia.apk"
     echo ""
     echo -e "${YELLOW}Next Steps:${NC}"
     echo "1. Transfer APK to your Android device"
