@@ -9,14 +9,12 @@ export function BrainDumpInput({
   onChange,
   onSave,
 }: BrainDumpInputProps) {
-  const isEmpty = !value.trim();
+  const isTrimmedEmpty = !value.trim();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isTrimmedEmpty) {
       e.preventDefault();
-      if (!isEmpty) {
-        onSave();
-      }
+      onSave();
     }
   };
 
@@ -30,7 +28,11 @@ export function BrainDumpInput({
         onKeyDown={handleKeyDown}
       />
       <div className="input-footer">
-        <button className="save-note-btn" onClick={onSave} disabled={isEmpty}>
+        <button
+          className="save-note-btn"
+          onClick={onSave}
+          disabled={isTrimmedEmpty}
+        >
           Save
           <br />
           Note

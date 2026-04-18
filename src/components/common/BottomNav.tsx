@@ -9,12 +9,10 @@ export function BottomNav({
   onTasksClick,
   onBrainDumpClick,
 }: BottomNavProps) {
-  const isTasksMode = activeMode === "tasks";
-
   return (
     <nav className="bottom-nav">
       <button
-        className={`nav-item ${isTasksMode ? "nav-item-active" : ""}`}
+        className={`nav-item ${activeMode === "tasks" ? "nav-item-active" : ""}`}
         onClick={onTasksClick}
         title="Tasks"
       >
@@ -22,7 +20,7 @@ export function BottomNav({
         <span className="nav-label">TASKS</span>
       </button>
       <button
-        className={`nav-item ${!isTasksMode ? "nav-item-active" : ""}`}
+        className={`nav-item ${activeMode === "brain-dump" ? "nav-item-active" : ""}`}
         onClick={onBrainDumpClick}
         title="Brain Dump"
       >
