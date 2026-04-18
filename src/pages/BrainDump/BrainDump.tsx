@@ -13,16 +13,15 @@ const brainDumpStyles = `
 .app-brain-dump-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  min-height: 100vh;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
 }
 
 .app-header-subpage {
-  display: flex;
+ display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--outline-variant);
 }
 
@@ -69,24 +68,6 @@ const brainDumpStyles = `
   border-radius: var(--radius-md);
   margin-bottom: 1.5rem;
   border: 1px solid var(--outline-variant);
-}
-
-.unstructured-input {
-  min-height: 120px;
-  padding: 0.875rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  background: var(--surface-container-lowest);
-  resize: vertical;
-  transition: var(--transition);
-}
-
-.unstructured-input:focus {
-  outline: none;
-  box-shadow: inset 0 0 0 1px var(--primary);
 }
 
 .input-footer {

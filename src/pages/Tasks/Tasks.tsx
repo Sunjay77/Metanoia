@@ -236,7 +236,7 @@ export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
           >
             ←
           </button>
-          <h1>Metanoia</h1>
+          <h1>METONIA</h1>
         </header>
         <main className="app-main">
           <TodoInput />
