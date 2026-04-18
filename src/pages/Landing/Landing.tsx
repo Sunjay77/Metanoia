@@ -1,14 +1,11 @@
-import "./LandingMode.css";
+import "./Landing.css";
 
-interface LandingModeProps {
+interface LandingProps {
   onTasksSelect: () => void;
   onBrainDumpSelect: () => void;
 }
 
-export function LandingMode({
-  onTasksSelect,
-  onBrainDumpSelect,
-}: LandingModeProps) {
+export function Landing({ onTasksSelect, onBrainDumpSelect }: LandingProps) {
   return (
     <div className="app">
       <header className="app-header">
@@ -19,9 +16,7 @@ export function LandingMode({
           <button className="mode-card mode-tasks" onClick={onTasksSelect}>
             <div className="mode-icon">✓</div>
             <div className="mode-content">
-              <span className="mode-label">MODE 01</span>
               <h2>Tasks</h2>
-              <p>Radical clarity for your immediate focus</p>
             </div>
             <div className="mode-arrow">→</div>
           </button>
@@ -32,9 +27,7 @@ export function LandingMode({
           >
             <div className="mode-icon">≡</div>
             <div className="mode-content">
-              <span className="mode-label">MODE 02</span>
               <h2>Brain Dump</h2>
-              <p>Unstructured space. Let ideas breathe</p>
             </div>
             <div className="mode-arrow">→</div>
           </button>

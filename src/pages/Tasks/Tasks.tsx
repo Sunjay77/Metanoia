@@ -1,12 +1,12 @@
 import { TodoInput } from "@/components/tasks/TodoInput";
 import { TodoList } from "@/components/tasks/TodoList";
-import "./TasksMode.css";
+import "./Tasks.css";
 
-interface TasksModeProps {
+interface TasksProps {
   onBackClick: () => void;
 }
 
-export function TasksMode({ onBackClick }: TasksModeProps) {
+export function Tasks({ onBackClick }: TasksProps) {
   return (
     <div className="app">
       <header className="app-header app-header-subpage">
@@ -17,8 +17,7 @@ export function TasksMode({ onBackClick }: TasksModeProps) {
         >
           ←
         </button>
-        <h1>Metania</h1>
-        <p>Organize your intent</p>
+        <h1>Metanoia</h1>
       </header>
       <main className="app-main">
         <TodoInput />

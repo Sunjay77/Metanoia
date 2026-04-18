@@ -1,15 +1,15 @@
 import { useState } from "react";
 import type { AppMode } from "@/types";
-import { LandingMode } from "@/components/modes/LandingMode";
-import { TasksMode } from "@/components/modes/TasksMode";
-import { BrainDumpMode } from "@/components/modes/BrainDumpMode";
+import { Landing } from "./Landing/Landing";
+import { Tasks } from "./Tasks/Tasks";
+import { BrainDump } from "./BrainDump/BrainDump";
 
 function App() {
   const [mode, setMode] = useState<AppMode>("landing");
 
   if (mode === "landing") {
     return (
-      <LandingMode
+      <Landing
         onTasksSelect={() => setMode("tasks")}
         onBrainDumpSelect={() => setMode("brain-dump")}
       />
@@ -17,10 +17,10 @@ function App() {
   }
 
   if (mode === "brain-dump") {
-    return <BrainDumpMode onTasksClick={() => setMode("tasks")} />;
+    return <BrainDump onTasksClick={() => setMode("tasks")} />;
   }
 
-  return <TasksMode onBackClick={() => setMode("landing")} />;
+  return <Tasks onBackClick={() => setMode("landing")} />;
 }
 
 export default App;

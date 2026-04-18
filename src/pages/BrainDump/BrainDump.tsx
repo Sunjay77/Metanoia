@@ -4,13 +4,13 @@ import { TopAppBar } from "@/components/common/TopAppBar";
 import { BottomNav } from "@/components/common/BottomNav";
 import { BrainDumpInput } from "@/components/brainDump/BrainDumpInput";
 import { NotesContainer } from "@/components/brainDump/NotesContainer";
-import "./BrainDumpMode.css";
+import "./BrainDump.css";
 
-interface BrainDumpModeProps {
+interface BrainDumpProps {
   onTasksClick: () => void;
 }
 
-export function BrainDumpMode({ onTasksClick }: BrainDumpModeProps) {
+export function BrainDump({ onTasksClick }: BrainDumpProps) {
   const [inputValue, setInputValue] = useState("");
   const { notes, addNote, removeNote } = useBrainDumpStore();
 
