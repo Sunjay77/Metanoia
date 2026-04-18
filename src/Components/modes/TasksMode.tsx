@@ -1,4 +1,5 @@
-import { TodoInput, TodoList } from "@/components/tasks";
+import { TodoInput } from "@/components/tasks/TodoInput";
+import { TodoList } from "@/components/tasks/TodoList";
 import "./TasksMode.css";
 
 interface TasksModeProps {

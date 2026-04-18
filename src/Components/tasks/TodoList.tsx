@@ -1,4 +1,4 @@
-import { useTodoStore } from "@/store";
+import { useTodoStore } from "@/store/todos/todoStore";
 import { TodoItem } from "./TodoItem";
 
 export function TodoList() {

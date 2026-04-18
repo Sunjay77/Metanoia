@@ -1,5 +1,5 @@
 import { NoteCard } from "./NoteCard";
-import type { BrainDumpNote } from "@/store";
+import type { BrainDumpNote } from "@/store/brainDump/types";
 
 interface NotesContainerProps {
   notes: BrainDumpNote[];
