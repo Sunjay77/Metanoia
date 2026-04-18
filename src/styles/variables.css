@@ -1,35 +1,35 @@
 /* VOID Design System - CSS Variables */
 
 :root {
-  /* Primary Colors */
-  --primary: #000000;
-  --primary-container: #3b3b3b;
-  --on-primary: #e2e2e2;
+  /* Light Theme (Golden) - Default */
+  --primary: #d4a574;
+  --primary-container: #f5e6d3;
+  --on-primary: #3d2817;
 
-  /* Surface Hierarchy */
-  --surface: #f9f9f9;
-  --surface-bright: #ffffff;
+  /* Surface Hierarchy - Light Theme */
+  --surface: #fffbf6;
+  --surface-bright: #fffbf6;
   --surface-container-lowest: #ffffff;
-  --surface-container-low: #f3f3f4;
-  --surface-container-high: #e8e8e8;
-  --surface-container-highest: #e2e2e2;
+  --surface-container-low: #fef5ed;
+  --surface-container-high: #f5e6d3;
+  --surface-container-highest: #e8d4be;
 
-  /* Text Colors */
-  --text-primary: #1a1c1c;
-  --text-secondary: #474747;
-  --text-muted: #777777;
-  --on-surface: #1a1c1c;
-  --on-surface-variant: #474747;
+  /* Text Colors - Light Theme */
+  --text-primary: #2c1810;
+  --text-secondary: #5d4a3a;
+  --text-muted: #8b7355;
+  --on-surface: #2c1810;
+  --on-surface-variant: #5d4a3a;
 
-  /* Accent Colors */
-  --success: #10b981;
-  --danger: #ba1a1a;
-  --outline-variant: #c6c6c6;
+  /* Accent Colors - Light Theme */
+  --success: #2d5a3d;
+  --danger: #c73a3a;
+  --outline-variant: #d9c4b0;
 
   /* Shadows - Ambient style */
-  --shadow-sm: 0 4px 12px rgba(26, 28, 28, 0.04);
-  --shadow-md: 0 8px 24px rgba(26, 28, 28, 0.05);
-  --shadow-lg: 0 12px 40px rgba(26, 28, 28, 0.06);
+  --shadow-sm: 0 4px 12px rgba(44, 24, 16, 0.04);
+  --shadow-md: 0 8px 24px rgba(44, 24, 16, 0.05);
+  --shadow-lg: 0 12px 40px rgba(44, 24, 16, 0.06);
 
   /* Transitions */
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -58,4 +58,72 @@
   --text-2xl: 2rem;
   --text-3xl: 2.5rem;
   --text-4xl: 3.5rem;
+}
+
+/* Dark Theme (Dark Greenish) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Primary Colors - Dark Theme */
+    --primary: #d4a574;
+    --primary-container: #c9934d;
+    --on-primary: #1b3a2d;
+
+    /* Surface Hierarchy - Dark Theme */
+    --surface: #1b3a2d;
+    --surface-bright: #2d5a4a;
+    --surface-container-lowest: #0f2417;
+    --surface-container-low: #1b3a2d;
+    --surface-container-high: #255341;
+    --surface-container-highest: #2d6a55;
+
+    /* Text Colors - Dark Theme */
+    --text-primary: #f5e6d3;
+    --text-secondary: #e8d4be;
+    --text-muted: #d4a574;
+    --on-surface: #f5e6d3;
+    --on-surface-variant: #e8d4be;
+
+    /* Accent Colors - Dark Theme */
+    --success: #81c784;
+    --danger: #e57373;
+    --outline-variant: #3d5a4f;
+
+    /* Shadows - Dark Theme */
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Optional: Dark theme class for manual toggle */
+.dark-theme {
+  /* Primary Colors - Dark Theme */
+  --primary: #d4a574;
+  --primary-container: #c9934d;
+  --on-primary: #1b3a2d;
+
+  /* Surface Hierarchy - Dark Theme */
+  --surface: #1b3a2d;
+  --surface-bright: #2d5a4a;
+  --surface-container-lowest: #0f2417;
+  --surface-container-low: #1b3a2d;
+  --surface-container-high: #255341;
+  --surface-container-highest: #2d6a55;
+
+  /* Text Colors - Dark Theme */
+  --text-primary: #f5e6d3;
+  --text-secondary: #e8d4be;
+  --text-muted: #d4a574;
+  --on-surface: #f5e6d3;
+  --on-surface-variant: #e8d4be;
+
+  /* Accent Colors - Dark Theme */
+  --success: #81c784;
+  --danger: #e57373;
+  --outline-variant: #3d5a4f;
+
+  /* Shadows - Dark Theme */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
