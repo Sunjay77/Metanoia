@@ -20,7 +20,6 @@ export function BrainDumpInput({
         onChange={(e) => onChange(e.target.value)}
       />
       <div className="input-footer">
-        <span className="input-label">UNSTRUCTURED INPUT</span>
         <button className="save-note-btn" onClick={onSave} disabled={isEmpty}>
           Save
           <br />
