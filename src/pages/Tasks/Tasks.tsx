@@ -20,18 +20,19 @@ const tasksStyles = `
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--outline-variant);
 }
 
 .app-header-subpage h1 {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin: 0;
   flex: 1;
+  letter-spacing: 0.05em;
 }
 
-.back-button {
+.header-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,14 +41,26 @@ const tasksStyles = `
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   transition: var(--transition);
   flex-shrink: 0;
 }
 
-.back-button:hover {
-  background: var(--surface-container-high);
+.header-icon-btn:hover {
+  background: var(--surface-container-low);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: 80px;
 }
 
 .todo-input-form {
@@ -60,7 +73,7 @@ const tasksStyles = `
   flex: 1;
   padding: 0.75rem 1rem;
   border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-family: inherit;
   font-size: 1rem;
   color: var(--text-primary);
@@ -71,32 +84,29 @@ const tasksStyles = `
 .todo-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  background: var(--surface-container-low);
 }
 
 .add-button {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(
-    to bottom,
-    var(--primary),
-    var(--primary-container)
-  );
+  background: var(--primary);
   color: var(--on-primary);
   border: none;
   border-radius: var(--radius-md);
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  min-width: 100px;
+  font-size: 0.875rem;
 }
 
 .add-button:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
 }
 
 .add-button:active {
-  transform: translateY(0);
+  background: var(--primary);
 }
 
 .todo-list-container {
@@ -114,14 +124,19 @@ const tasksStyles = `
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--outline-variant);
+  padding: 1rem;
+  background: var(--surface-container-lowest);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-sm);
   transition: var(--transition);
 }
 
@@ -130,7 +145,7 @@ const tasksStyles = `
 }
 
 .todo-item.completed {
-  background: var(--surface-container-high);
+  opacity: 0.7;
 }
 
 .todo-content {
@@ -145,6 +160,7 @@ const tasksStyles = `
   height: 1.25rem;
   cursor: pointer;
   accent-color: var(--primary);
+  flex-shrink: 0;
 }
 
 .todo-title {
@@ -171,19 +187,21 @@ const tasksStyles = `
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .delete-button:hover {
-  background: rgba(186, 26, 26, 0.1);
+  opacity: 0.7;
 }
 
 .todo-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  border-top: 1px solid var(--outline-variant);
+  padding: 1rem 0;
+  margin-top: 1rem;
   gap: 1rem;
+  border-top: 1px solid var(--outline-variant);
 }
 
 .todo-count {
@@ -203,11 +221,19 @@ const tasksStyles = `
 }
 
 .clear-button:hover {
-  background: var(--surface-container-high);
+  background: var(--surface-container-low);
   border-color: var(--primary);
 }
 
 @media (max-width: 640px) {
+  .app-main {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .app-header-subpage h1 {
+    font-size: 1.25rem;
+  }
+
   .todo-input-form {
     flex-direction: column;
   }
@@ -216,7 +242,7 @@ const tasksStyles = `
     width: 100%;
   }
 
-  .back-button {
+  .header-icon-btn {
     padding: 0.25rem;
     font-size: 1.25rem;
   }
@@ -230,13 +256,13 @@ export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
       <div className="app app-tasks-container">
         <header className="app-header app-header-subpage">
           <button
-            className="back-button"
+            className="header-icon-btn"
             onClick={onBackClick}
             title="Back to mode selection"
           >
             ←
           </button>
-          <h1>METONIA</h1>
+          <h1>Tasks</h1>
         </header>
         <main className="app-main">
           <TodoInput />

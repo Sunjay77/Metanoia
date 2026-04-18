@@ -3,6 +3,7 @@ import type { AppMode } from "@/types";
 import { Landing } from "./Landing/Landing";
 import { Tasks } from "./Tasks/Tasks";
 import { BrainDump } from "./BrainDump/BrainDump";
+import { SavedBrainDumps } from "./BrainDump/SavedBrainDumps";
 
 function App() {
   const [mode, setMode] = useState<AppMode>(() => {
@@ -29,7 +30,21 @@ function App() {
   }
 
   if (mode === "brain-dump") {
-    return <BrainDump onTasksClick={() => setMode("tasks")} />;
+    return (
+      <BrainDump
+        onTasksClick={() => setMode("tasks")}
+        onSavedNotesClick={() => setMode("brain-dump-saved")}
+      />
+    );
+  }
+
+  if (mode === "brain-dump-saved") {
+    return (
+      <SavedBrainDumps
+        onBackClick={() => setMode("brain-dump")}
+        onTasksClick={() => setMode("tasks")}
+      />
+    );
   }
 
   return (
