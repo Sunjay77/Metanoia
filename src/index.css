@@ -5,8 +5,17 @@
 }
 
 :root {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
   line-height: 1.6;
   font-weight: 400;
 
@@ -20,12 +29,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--bg-primary);
 }
 
 #root {
@@ -47,13 +62,9 @@ button {
 }
 
 /* Remove default input styles */
-input[type='text'],
-input[type='checkbox'] {
+input[type="text"],
+input[type="checkbox"] {
   font-family: inherit;
-}
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
 }
 
 code {
@@ -61,4 +72,15 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #1f2937;
+  }
+
+  body {
+    background-color: #1f2937;
+  }
 }
