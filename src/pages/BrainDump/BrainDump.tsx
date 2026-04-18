@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useBrainDumpStore } from "@/store/brainDump/brainDumpStore";
-import { TopAppBar } from "@/components/common/TopAppBar";
 import { BottomNav } from "@/components/common/BottomNav";
 import { BrainDumpInput } from "@/components/brainDump/BrainDumpInput";
 import { NotesContainer } from "@/components/brainDump/NotesContainer";
@@ -20,9 +19,18 @@ export function BrainDump({ onTasksClick }: BrainDumpProps) {
   };
 
   return (
-    <div className="app app-full-screen">
-      <TopAppBar />
-      <main className="brain-dump-main">
+    <div className="app app-brain-dump-container">
+      <header className="app-header app-header-subpage">
+        <button
+          className="back-button"
+          onClick={onTasksClick}
+          title="Back to tasks"
+        >
+          ←
+        </button>
+        <h1>Brain Dump</h1>
+      </header>
+      <main className="app-main">
         <BrainDumpInput
           value={inputValue}
           onChange={setInputValue}
@@ -30,7 +38,11 @@ export function BrainDump({ onTasksClick }: BrainDumpProps) {
         />
         <NotesContainer notes={notes} onDeleteNote={removeNote} />
       </main>
-      <BottomNav activeMode="brain-dump" onTasksClick={onTasksClick} />
+      <BottomNav
+        activeMode="brain-dump"
+        onTasksClick={onTasksClick}
+        onBrainDumpClick={() => {}} // Already on brain dump, do nothing
+      />
     </div>
   );
 }

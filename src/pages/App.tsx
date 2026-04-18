@@ -20,7 +20,12 @@ function App() {
     return <BrainDump onTasksClick={() => setMode("tasks")} />;
   }
 
-  return <Tasks onBackClick={() => setMode("landing")} />;
+  return (
+    <Tasks
+      onBackClick={() => setMode("landing")}
+      onBrainDumpClick={() => setMode("brain-dump")}
+    />
+  );
 }
 
 export default App;
