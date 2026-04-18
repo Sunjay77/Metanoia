@@ -1,4 +1,5 @@
 import { TodoInput, TodoList } from "@/components/tasks";
+import "./TasksMode.css";
 
 interface TasksModeProps {
   onBackClick: () => void;

@@ -1,3 +1,5 @@
+import "./LandingMode.css";
+
 interface LandingModeProps {
   onTasksSelect: () => void;
   onBrainDumpSelect: () => void;

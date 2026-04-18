@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useBrainDumpStore } from "@/store";
 import { TopAppBar, BottomNav } from "@/components/common";
 import { BrainDumpInput, NotesContainer } from "@/components/brainDump";
+import "./BrainDumpMode.css";
 
 interface BrainDumpModeProps {
   onTasksClick: () => void;
@@ -24,15 +25,10 @@ export function BrainDumpMode({ onTasksClick }: BrainDumpModeProps) {
           value={inputValue}
           onChange={setInputValue}
           onSave={handleSaveNote}
-          disabled={!inputValue.trim()}
         />
         <NotesContainer notes={notes} onDeleteNote={removeNote} />
       </main>
-      <BottomNav
-        activeMode="brain-dump"
-        onTasksClick={onTasksClick}
-        onBrainDumpClick={() => {}}
-      />
+      <BottomNav activeMode="brain-dump" onTasksClick={onTasksClick} />
     </div>
   );
 }

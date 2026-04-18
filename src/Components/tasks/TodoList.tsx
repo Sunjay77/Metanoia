@@ -1,35 +1,37 @@
-import { useTodoStore, type Todo } from "@/store";
+import { useTodoStore } from "@/store";
+import { TodoItem } from "./TodoItem";
 
-interface TodoItemProps {
-  todo: Todo;
-}
+export function TodoList() {
+  const todos = useTodoStore((state) => state.todos);
+  const clearCompleted = useTodoStore((state) => state.clearCompleted);
 
-export function TodoItem({ todo }: TodoItemProps) {
-  const toggleTodo = useTodoStore((state) => state.toggleTodo);
-  const removeTodo = useTodoStore((state) => state.removeTodo);
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const remainingCount = todos.length - completedCount;
 
   return (
-    <li className={`todo-item ${todo.completed ? "completed" : ""}`}>
-      <div className="todo-content">
-        <input
-          type="checkbox"
-          checked={todo.completed}
-          onChange={() => toggleTodo(todo.id)}
-          className="todo-checkbox"
-          aria-label={`Mark "${todo.title}" as ${todo.completed ? "incomplete" : "complete"}`}
-        />
-        <span className={`todo-title ${todo.completed ? "completed" : ""}`}>
-          {todo.title}
-        </span>
-      </div>
-      <button
-        onClick={() => removeTodo(todo.id)}
-        className="delete-button"
-        aria-label={`Delete "${todo.title}"`}
-        title="Delete this task"
-      >
-        ✕
-      </button>
-    </li>
+    <div className="todo-list-container">
+      {todos.length === 0 ? (
+        <p className="empty-message">✨ No todos yet. Time to add something!</p>
+      ) : (
+        <>
+          <ul className="todo-list">
+            {todos.map((todo) => (
+              <TodoItem key={todo.id} todo={todo} />
+            ))}
+          </ul>
+          <div className="todo-footer">
+            <span className="todo-count">
+              {remainingCount} {remainingCount === 1 ? "task" : "tasks"}{" "}
+              remaining
+            </span>
+            {completedCount > 0 && (
+              <button onClick={clearCompleted} className="clear-button">
+                Clear completed
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
