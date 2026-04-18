@@ -12,7 +12,7 @@ export function BrainDumpInput({
   const isEmpty = !value.trim();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.shiftKey && e.key === "Enter") {
+    if (e.key === "Enter") {
       e.preventDefault();
       if (!isEmpty) {
         onSave();
@@ -24,7 +24,7 @@ export function BrainDumpInput({
     <div className="input-section">
       <textarea
         className="unstructured-input"
-        placeholder="Dump your thoughts here... (Shift + Enter to save)"
+        placeholder="Let Them..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
