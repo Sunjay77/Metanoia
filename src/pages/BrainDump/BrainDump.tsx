@@ -28,7 +28,7 @@ export function BrainDump({ onTasksClick }: BrainDumpProps) {
         >
           ←
         </button>
-        <h1>Brain Dump</h1>
+        <h1>METANOIA</h1>
       </header>
       <main className="app-main">
         <BrainDumpInput
