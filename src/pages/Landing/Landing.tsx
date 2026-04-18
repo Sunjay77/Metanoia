@@ -3,14 +3,26 @@ import "./Landing.css";
 interface LandingProps {
   onTasksSelect: () => void;
   onBrainDumpSelect: () => void;
+  onSoundsSelect: () => void;
 }
 
-export function Landing({ onTasksSelect, onBrainDumpSelect }: LandingProps) {
+export function Landing({
+  onTasksSelect,
+  onBrainDumpSelect,
+  onSoundsSelect,
+}: LandingProps) {
   return (
     <div className="app">
       <header className="app-header">
         <h1>Metanoia</h1>
         <p>A Change Of Mind</p>
+        <button
+          className="header-icon-btn header-sounds-btn"
+          onClick={onSoundsSelect}
+          title="Access sounds"
+        >
+          🎵
+        </button>
       </header>
       <main className="app-main app-main-landing">
         <div className="modes-container">

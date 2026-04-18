@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import type { AppMode } from "@/types";
+import { useAudioCleanup } from "@/hooks/useAudioCleanup";
 import { Landing } from "./Landing/Landing";
 import { Tasks } from "./Tasks/Tasks";
 import { BrainDump } from "./BrainDump/BrainDump";
 import { SavedBrainDumps } from "./BrainDump/SavedBrainDumps";
+import { Sounds } from "./Sounds/Sounds";
 
 const STORAGE_KEY = "appMode";
 const DEFAULT_MODE = "landing" as const;
@@ -14,9 +16,14 @@ function App() {
     return (saved as AppMode) || DEFAULT_MODE;
   });
 
+  // Enable audio cleanup for memory management
+  useAudioCleanup();
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, mode);
   }, [mode]);
+
+  const memoizedMode = useMemo(() => mode, [mode]);
 
   const modeComponents = useMemo(
     () => ({
@@ -24,6 +31,7 @@ function App() {
         <Landing
           onTasksSelect={() => setMode("tasks")}
           onBrainDumpSelect={() => setMode("brain-dump")}
+          onSoundsSelect={() => setMode("sounds")}
         />
       ),
       tasks: (
@@ -34,7 +42,7 @@ function App() {
       ),
       "brain-dump": (
         <BrainDump
-          onTasksClick={() => setMode("tasks")}
+          onBackClick={() => setMode("landing")}
           onSavedNotesClick={() => setMode("brain-dump-saved")}
         />
       ),
@@ -44,11 +52,12 @@ function App() {
           onTasksClick={() => setMode("tasks")}
         />
       ),
+      sounds: <Sounds onBackClick={() => setMode("landing")} />,
     }),
     [],
   );
 
-  return modeComponents[mode];
+  return modeComponents[memoizedMode];
 }
 
 export default App;

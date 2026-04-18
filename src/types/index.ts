@@ -1,5 +1,10 @@
 // App modes
-export type AppMode = "landing" | "tasks" | "brain-dump" | "brain-dump-saved";
+export type AppMode =
+  | "landing"
+  | "tasks"
+  | "brain-dump"
+  | "brain-dump-saved"
+  | "sounds";
 
 // Common types
 export interface Config {

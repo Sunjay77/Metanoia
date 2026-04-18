@@ -5,13 +5,13 @@ import { BrainDumpInput } from "@/components/brainDump/BrainDumpInput";
 import "./BrainDump.css";
 
 interface BrainDumpProps {
-  onTasksClick: () => void;
+  onBackClick: () => void;
   onSavedNotesClick: () => void;
 }
 
-export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
+export function BrainDump({ onBackClick, onSavedNotesClick }: BrainDumpProps) {
   const [inputValue, setInputValue] = useState("");
-  const {addNote } = useBrainDumpStore();
+  const { addNote } = useBrainDumpStore();
 
   const handleSaveNote = () => {
     addNote(inputValue);
@@ -23,8 +23,8 @@ export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
       <header className="app-header app-header-subpage">
         <button
           className="header-icon-btn"
-          onClick={onTasksClick}
-          title="Back to tasks"
+          onClick={onBackClick}
+          title="Back to landing"
         >
           ←
         </button>
@@ -48,7 +48,7 @@ export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
       </main>
       <BottomNav
         activeMode="brain-dump"
-        onTasksClick={onTasksClick}
+        onTasksClick={() => {}}
         onBrainDumpClick={() => {}}
       />
     </div>
