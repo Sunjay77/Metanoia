@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap");
 @import "./variables.css";
 
 * {
@@ -19,7 +18,7 @@ body {
   overflow-x: hidden;
   background-color: var(--surface);
   font-family:
-    "Inter",
+    "Lucida Sans",
     system-ui,
     -apple-system,
     "Segoe UI",
@@ -43,7 +42,7 @@ body {
 /* Base element styles */
 input,
 button {
-  font-family: "Inter", inherit;
+  font-family: "Lucida Sans", inherit;
   font-size: inherit;
 }
 

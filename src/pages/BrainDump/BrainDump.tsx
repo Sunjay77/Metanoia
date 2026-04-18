@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useBrainDumpStore } from "@/store/brainDump/brainDumpStore";
 import { BottomNav } from "@/components/common/BottomNav";
 import { BrainDumpInput } from "@/components/brainDump/BrainDumpInput";
-import { NotesContainer } from "@/components/brainDump/NotesContainer";
 import "./BrainDump.css";
 
 interface BrainDumpProps {
@@ -12,7 +11,7 @@ interface BrainDumpProps {
 
 export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
   const [inputValue, setInputValue] = useState("");
-  const { notes, addNote, removeNote } = useBrainDumpStore();
+  const {addNote } = useBrainDumpStore();
 
   const handleSaveNote = () => {
     addNote(inputValue);
@@ -31,15 +30,13 @@ export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
         </button>
         <h1>Brain Dump</h1>
         <div className="header-actions">
-          {notes.length > 0 && (
-            <button
-              className="header-icon-btn"
-              onClick={onSavedNotesClick}
-              title="View saved notes"
-            >
-              Dumps
-            </button>
-          )}
+          <button
+            className="header-icon-btn"
+            onClick={onSavedNotesClick}
+            title="View saved notes"
+          >
+            Dumps
+          </button>
         </div>
       </header>
       <main className="app-main">
@@ -48,15 +45,6 @@ export function BrainDump({ onTasksClick, onSavedNotesClick }: BrainDumpProps) {
           onChange={setInputValue}
           onSave={handleSaveNote}
         />
-        {notes.length > 0 && (
-          <>
-            <div className="notes-section-header">Recent Notes</div>
-            <NotesContainer
-              notes={notes.slice(0, 5)}
-              onDeleteNote={removeNote}
-            />
-          </>
-        )}
       </main>
       <BottomNav
         activeMode="brain-dump"

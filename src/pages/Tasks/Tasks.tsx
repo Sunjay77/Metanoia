@@ -11,7 +11,7 @@ interface TasksProps {
 export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
   return (
     <div className="app-tasks-container">
-      <header className="app-header-subpage">
+      <header className="app-header app-header-subpage">
         <button
           className="header-icon-btn"
           onClick={onBackClick}
@@ -20,6 +20,7 @@ export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
           ←
         </button>
         <h1>Tasks</h1>
+        <div className="header-actions"></div>
       </header>
       <main className="app-main">
         <TodoInput />
