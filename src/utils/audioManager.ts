@@ -5,6 +5,27 @@ export class AudioManager {
   private currentType: "brown-noise" | "rain" | null = null;
   private fadeInterval: number | null = null;
 
+  // Get the base path for audio files (works in both web and APK builds)
+  private getSoundPath(soundType: "brown-noise" | "rain"): string {
+    const soundFile =
+      soundType === "brown-noise" ? "brown_noise.mp3" : "rain_sound.mp3";
+
+    // Try multiple paths to support different build environments:
+    // 1. Absolute path - works in dev and most web builds
+    // 2. Relative path - works in Cordova/APK builds
+    // The browser will try each path and the error handler will log if all fail
+
+    // For Cordova APK builds, we need to check if we're in a mobile app
+    // and use the correct base URL
+    if ((window as any).cordova) {
+      // Running in Cordova app - use relative path from root
+      return `./sounds/${soundFile}`;
+    }
+
+    // Web build - use absolute path
+    return `/sounds/${soundFile}`;
+  }
+
   playSound(soundType: "brown-noise" | "rain", volume: number = 0.5): void {
     // Stop the currently playing sound
     if (this.currentAudio) {
@@ -21,10 +42,7 @@ export class AudioManager {
     }
 
     // Get the appropriate sound file
-    const soundFile =
-      soundType === "brown-noise"
-        ? "/sounds/brown_noise.mp3"
-        : "/sounds/rain_sound.mp3";
+    const soundFile = this.getSoundPath(soundType);
 
     // Create new audio element
     const audio = new Audio();
@@ -35,8 +53,20 @@ export class AudioManager {
     const normalizedVolume = Math.max(0, Math.min(1, volume / 100));
 
     // Setup event listeners
+    let hasRetried = false;
     audio.addEventListener("error", () => {
-      console.error(`✗ Failed to load ${soundType}`);
+      console.error(`✗ Failed to load ${soundType} from ${soundFile}`);
+
+      // If Cordova app and first path failed, try alternative paths
+      if ((window as any).cordova && !hasRetried) {
+        hasRetried = true;
+        console.log(`Retrying with alternative path...`);
+        // Try alternative path
+        audio.src = `./sounds/${soundType === "brown-noise" ? "brown_noise.mp3" : "rain_sound.mp3"}`;
+        audio.play().catch(() => {
+          console.error(`All paths failed for ${soundType}`);
+        });
+      }
     });
 
     audio.addEventListener("play", () => {
@@ -164,6 +194,53 @@ export class AudioManager {
       this.nextAudio = null;
     }
     this.currentType = null;
+  }
+
+  // Play alarm sound using Web Audio API (no file needed)
+  playAlarm(): void {
+    try {
+      const audioContext = new (
+        window.AudioContext || (window as any).webkitAudioContext
+      )();
+      const now = audioContext.currentTime;
+
+      // Create oscillators for a beeping alarm sound
+      const oscillators: OscillatorNode[] = [];
+      const gains: GainNode[] = [];
+
+      // Triple beep pattern
+      for (let beep = 0; beep < 3; beep++) {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        osc.frequency.value = 800; // Frequency in Hz
+        osc.type = "sine";
+
+        const beepStart = now + beep * 0.4; // 400ms between beeps
+        const beepDuration = 0.2; // 200ms beep duration
+
+        // Fade in
+        gain.gain.setValueAtTime(0, beepStart);
+        gain.gain.linearRampToValueAtTime(0.3, beepStart + 0.05);
+        // Hold
+        gain.gain.setValueAtTime(0.3, beepStart + beepDuration - 0.05);
+        // Fade out
+        gain.gain.linearRampToValueAtTime(0, beepStart + beepDuration);
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start(beepStart);
+        osc.stop(beepStart + beepDuration);
+
+        oscillators.push(osc);
+        gains.push(gain);
+      }
+
+      console.log("✓ Alarm sound played");
+    } catch (error) {
+      console.error("Error playing alarm:", error);
+    }
   }
 
   release(soundType?: "brown-noise" | "rain"): void {

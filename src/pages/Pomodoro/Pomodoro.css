@@ -1,0 +1,375 @@
+.app-pomodoro-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--surface);
+  padding-bottom: 60px;
+}
+
+.pomodoro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem;
+}
+
+/* Timer Display */
+.timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.session-type {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timer-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.timer-value {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-count {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.session-count span {
+  font-weight: 600;
+  color: var(--primary);
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.control-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 48px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.control-btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.control-btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.control-btn-warning {
+  background: var(--warning, #ff9800);
+  color: white;
+}
+
+.control-btn-warning:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.control-btn-success {
+  background: var(--success, #4caf50);
+  color: white;
+}
+
+.control-btn-success:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.control-btn-secondary {
+  background: var(--surface-container-high);
+  color: var(--text);
+  border: 1px solid var(--outline-variant);
+}
+
+.control-btn-secondary:hover {
+  background: var(--surface-container-highest);
+  transform: translateY(-2px);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 300px;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--surface-container-low);
+  border-radius: 12px;
+  border: 1px solid var(--outline-variant);
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Settings Panel */
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 1rem;
+}
+
+.settings-panel h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  text-align: center;
+  color: var(--text);
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-group label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.duration-input {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  text-align: center;
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  background: var(--surface-container);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.duration-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface-container-high);
+}
+
+.duration-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  background: var(--surface-container-high);
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duration-btn:hover {
+  background: var(--primary-container);
+  color: var(--primary);
+}
+
+.duration-btn:active {
+  transform: scale(0.95);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.settings-actions .control-btn {
+  flex: 1;
+}
+
+/* Break Notice Modal */
+.break-notice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.break-notice-modal {
+  background: var(--surface-container);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  border: 1px solid var(--outline-variant);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.break-notice-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.break-notice-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--primary);
+}
+
+.break-notice-content {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.break-notice-content p {
+  margin: 0.75rem 0;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.break-notice-content .break-duration {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--surface-container-low);
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.break-notice-content .break-duration span {
+  color: var(--primary);
+  display: block;
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.break-notice-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.break-notice-actions .control-btn {
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .pomodoro-content {
+    gap: 1.5rem;
+  }
+
+  .timer-circle {
+    width: 160px;
+    height: 160px;
+  }
+
+  .timer-value {
+    font-size: 2.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .control-btn {
+    width: 100%;
+    min-width: unset;
+  }
+}

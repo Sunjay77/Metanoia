@@ -1,11 +1,20 @@
 import { useSoundStore } from "@/store/sounds/soundStore";
+import { BottomNav } from "@/components/common/BottomNav";
 import "./Sounds.css";
 
 interface SoundsProps {
   onBackClick: () => void;
+  onTasksClick: () => void;
+  onBrainDumpClick: () => void;
+  onPomodoroClick: () => void;
 }
 
-export function Sounds({ onBackClick }: SoundsProps) {
+export function Sounds({
+  onBackClick,
+  onTasksClick,
+  onBrainDumpClick,
+  onPomodoroClick,
+}: SoundsProps) {
   const { isPlaying, activeSound, volume, togglePlay, setVolume, stopAll } =
     useSoundStore();
 
@@ -94,6 +103,12 @@ export function Sounds({ onBackClick }: SoundsProps) {
           </div>
         )}
       </main>
+      <BottomNav
+        activeMode="brain-dump"
+        onTasksClick={onTasksClick}
+        onBrainDumpClick={onBrainDumpClick}
+        onPomodoroClick={onPomodoroClick}
+      />
     </div>
   );
 }

@@ -7,9 +7,16 @@ import "./BrainDump.css";
 interface BrainDumpProps {
   onBackClick: () => void;
   onSavedNotesClick: () => void;
+  onTasksClick: () => void;
+  onPomodoroClick: () => void;
 }
 
-export function BrainDump({ onBackClick, onSavedNotesClick }: BrainDumpProps) {
+export function BrainDump({
+  onBackClick,
+  onSavedNotesClick,
+  onTasksClick,
+  onPomodoroClick,
+}: BrainDumpProps) {
   const [inputValue, setInputValue] = useState("");
   const { addNote } = useBrainDumpStore();
 
@@ -48,8 +55,9 @@ export function BrainDump({ onBackClick, onSavedNotesClick }: BrainDumpProps) {
       </main>
       <BottomNav
         activeMode="brain-dump"
-        onTasksClick={() => {}}
+        onTasksClick={onTasksClick}
         onBrainDumpClick={() => {}}
+        onPomodoroClick={onPomodoroClick}
       />
     </div>
   );

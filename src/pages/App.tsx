@@ -6,6 +6,7 @@ import { Tasks } from "./Tasks/Tasks";
 import { BrainDump } from "./BrainDump/BrainDump";
 import { SavedBrainDumps } from "./BrainDump/SavedBrainDumps";
 import { Sounds } from "./Sounds/Sounds";
+import { Pomodoro } from "./Pomodoro/Pomodoro";
 
 const STORAGE_KEY = "appMode";
 const DEFAULT_MODE = "landing" as const;
@@ -38,21 +39,40 @@ function App() {
         <Tasks
           onBackClick={() => setMode("landing")}
           onBrainDumpClick={() => setMode("brain-dump")}
+          onPomodoroClick={() => setMode("pomodoro")}
         />
       ),
       "brain-dump": (
         <BrainDump
           onBackClick={() => setMode("landing")}
           onSavedNotesClick={() => setMode("brain-dump-saved")}
+          onTasksClick={() => setMode("tasks")}
+          onPomodoroClick={() => setMode("pomodoro")}
         />
       ),
       "brain-dump-saved": (
         <SavedBrainDumps
           onBackClick={() => setMode("brain-dump")}
           onTasksClick={() => setMode("tasks")}
+          onBrainDumpClick={() => setMode("brain-dump")}
+          onPomodoroClick={() => setMode("pomodoro")}
         />
       ),
-      sounds: <Sounds onBackClick={() => setMode("landing")} />,
+      sounds: (
+        <Sounds
+          onBackClick={() => setMode("landing")}
+          onTasksClick={() => setMode("tasks")}
+          onBrainDumpClick={() => setMode("brain-dump")}
+          onPomodoroClick={() => setMode("pomodoro")}
+        />
+      ),
+      pomodoro: (
+        <Pomodoro
+          onBackClick={() => setMode("landing")}
+          onTasksClick={() => setMode("tasks")}
+          onBrainDumpClick={() => setMode("brain-dump")}
+        />
+      ),
     }),
     [],
   );

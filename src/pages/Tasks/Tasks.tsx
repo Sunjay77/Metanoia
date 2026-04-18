@@ -6,9 +6,14 @@ import "./Tasks.css";
 interface TasksProps {
   onBackClick: () => void;
   onBrainDumpClick: () => void;
+  onPomodoroClick: () => void;
 }
 
-export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
+export function Tasks({
+  onBackClick,
+  onBrainDumpClick,
+  onPomodoroClick,
+}: TasksProps) {
   return (
     <div className="app-tasks-container">
       <header className="app-header app-header-subpage">
@@ -30,6 +35,7 @@ export function Tasks({ onBackClick, onBrainDumpClick }: TasksProps) {
         activeMode="tasks"
         onTasksClick={() => {}}
         onBrainDumpClick={onBrainDumpClick}
+        onPomodoroClick={onPomodoroClick}
       />
     </div>
   );

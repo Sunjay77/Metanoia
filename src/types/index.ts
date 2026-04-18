@@ -4,7 +4,8 @@ export type AppMode =
   | "tasks"
   | "brain-dump"
   | "brain-dump-saved"
-  | "sounds";
+  | "sounds"
+  | "pomodoro";
 
 // Common types
 export interface Config {
