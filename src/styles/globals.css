@@ -59,6 +59,22 @@ input[type="checkbox"] {
   font-family: "Inter", inherit;
 }
 
+/* App Container Styles */
+.app {
+  min-height: 100vh;
+  background: var(--surface);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
 /* Animations */
 @keyframes slideIn {
   from {
