@@ -4,7 +4,6 @@ export type AppMode =
   | "tasks"
   | "brain-dump"
   | "brain-dump-saved"
-  | "sounds"
   | "pomodoro";
 
 // Common types

@@ -5,7 +5,6 @@ import { Landing } from "./Landing/Landing";
 import { Tasks } from "./Tasks/Tasks";
 import { BrainDump } from "./BrainDump/BrainDump";
 import { SavedBrainDumps } from "./BrainDump/SavedBrainDumps";
-import { Sounds } from "./Sounds/Sounds";
 import { Pomodoro } from "./Pomodoro/Pomodoro";
 
 const STORAGE_KEY = "appMode";
@@ -32,7 +31,7 @@ function App() {
         <Landing
           onTasksSelect={() => setMode("tasks")}
           onBrainDumpSelect={() => setMode("brain-dump")}
-          onSoundsSelect={() => setMode("sounds")}
+          onPomodoroSelect={() => setMode("pomodoro")}
         />
       ),
       tasks: (
@@ -53,14 +52,6 @@ function App() {
       "brain-dump-saved": (
         <SavedBrainDumps
           onBackClick={() => setMode("brain-dump")}
-          onTasksClick={() => setMode("tasks")}
-          onBrainDumpClick={() => setMode("brain-dump")}
-          onPomodoroClick={() => setMode("pomodoro")}
-        />
-      ),
-      sounds: (
-        <Sounds
-          onBackClick={() => setMode("landing")}
           onTasksClick={() => setMode("tasks")}
           onBrainDumpClick={() => setMode("brain-dump")}
           onPomodoroClick={() => setMode("pomodoro")}

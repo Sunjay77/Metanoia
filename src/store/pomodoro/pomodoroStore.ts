@@ -11,6 +11,8 @@ interface PomodoroStore {
   // Settings
   workDuration: number; // in minutes
   breakDuration: number; // in minutes
+  alarmEnabled: boolean;
+  alarmVolume: number; // 0-100
 
   // Current session state
   isRunning: boolean;
@@ -24,6 +26,8 @@ interface PomodoroStore {
   // Actions
   setWorkDuration: (duration: number) => void;
   setBreakDuration: (duration: number) => void;
+  setAlarmEnabled: (enabled: boolean) => void;
+  setAlarmVolume: (volume: number) => void;
   startSession: () => void;
   pauseSession: () => void;
   resumeSession: () => void;
@@ -38,6 +42,8 @@ export const usePomodoro = create<PomodoroStore>()(
     (set, get) => ({
       workDuration: 25,
       breakDuration: 5,
+      alarmEnabled: true,
+      alarmVolume: 70,
       isRunning: false,
       timeLeft: 25 * 60, // 25 minutes in seconds
       isWorkSession: true,
@@ -56,6 +62,14 @@ export const usePomodoro = create<PomodoroStore>()(
 
       setBreakDuration: (duration: number) => {
         set({ breakDuration: duration });
+      },
+
+      setAlarmEnabled: (enabled: boolean) => {
+        set({ alarmEnabled: enabled });
+      },
+
+      setAlarmVolume: (volume: number) => {
+        set({ alarmVolume: volume });
       },
 
       startSession: () => {

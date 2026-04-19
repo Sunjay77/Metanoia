@@ -196,34 +196,36 @@ export class AudioManager {
     this.currentType = null;
   }
 
-  // Play alarm sound using Web Audio API (no file needed)
-  playAlarm(): void {
+  // Play customizable alarm sound using Web Audio API
+  playAlarmWithVolume(volume: number = 0.5): void {
     try {
       const audioContext = new (
         window.AudioContext || (window as any).webkitAudioContext
       )();
       const now = audioContext.currentTime;
+      const volumeGain = Math.max(0, Math.min(1, volume / 100));
 
-      // Create oscillators for a beeping alarm sound
+      // Create oscillators for a pleasant beep alarm
       const oscillators: OscillatorNode[] = [];
       const gains: GainNode[] = [];
 
-      // Triple beep pattern
+      // Triple beep pattern with frequency sweep for better perception
       for (let beep = 0; beep < 3; beep++) {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
 
-        osc.frequency.value = 800; // Frequency in Hz
+        // Varying frequency for each beep
+        osc.frequency.value = 800 + beep * 100; // 800Hz, 900Hz, 1000Hz
         osc.type = "sine";
 
-        const beepStart = now + beep * 0.4; // 400ms between beeps
-        const beepDuration = 0.2; // 200ms beep duration
+        const beepStart = now + beep * 0.5; // 500ms between beeps
+        const beepDuration = 0.3; // 300ms beep duration
 
         // Fade in
         gain.gain.setValueAtTime(0, beepStart);
-        gain.gain.linearRampToValueAtTime(0.3, beepStart + 0.05);
+        gain.gain.linearRampToValueAtTime(volumeGain, beepStart + 0.08);
         // Hold
-        gain.gain.setValueAtTime(0.3, beepStart + beepDuration - 0.05);
+        gain.gain.setValueAtTime(volumeGain, beepStart + beepDuration - 0.08);
         // Fade out
         gain.gain.linearRampToValueAtTime(0, beepStart + beepDuration);
 
@@ -257,6 +259,97 @@ export class AudioManager {
 
   getCurrentAudio(): "brown-noise" | "rain" | null {
     return this.currentType || null;
+  }
+
+  // Generate brown noise using Web Audio API with enhanced smoothness
+  playBrownNoise(volume: number = 0.4): void {
+    try {
+      const audioContext = new (
+        window.AudioContext || (window as any).webkitAudioContext
+      )();
+
+      // Create larger buffer for better brown noise quality
+      const bufferSize = 16384;
+      const brownNoiseBuffer = audioContext.createBuffer(
+        1,
+        bufferSize,
+        audioContext.sampleRate
+      );
+      const brownNoiseOutput = brownNoiseBuffer.getChannelData(0);
+
+      // Generate enhanced brown noise with multiple filtering passes
+      let lastOut = 0;
+      let lastLastOut = 0;
+      
+      for (let i = 0; i < bufferSize; i++) {
+        // White noise
+        const white = Math.random() * 2 - 1;
+        
+        // Apply multiple poles of filtering for smoother brown noise
+        // Using cascaded integrators for better smoothing
+        const filtered1 = (lastOut + 0.02 * white) / 1.02;
+        const filtered2 = (lastLastOut + 0.01 * filtered1) / 1.01;
+        
+        brownNoiseOutput[i] = filtered2;
+        lastLastOut = lastOut;
+        lastOut = filtered2;
+      }
+
+      // Normalize the signal
+      let max = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        max = Math.max(max, Math.abs(brownNoiseOutput[i]));
+      }
+      if (max > 0) {
+        for (let i = 0; i < bufferSize; i++) {
+          brownNoiseOutput[i] = (brownNoiseOutput[i] / max) * 0.85;
+        }
+      }
+
+      // Create a source from the brown noise buffer and loop it
+      const source = audioContext.createBufferSource();
+      const gainNode = audioContext.createGain();
+
+      source.buffer = brownNoiseBuffer;
+      source.loop = true;
+      gainNode.gain.value = Math.max(0, Math.min(1, volume / 100));
+
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      source.start(0);
+
+      // Store the source and gain for later control
+      (this as any).brownNoiseSource = source;
+      (this as any).brownNoiseGain = gainNode;
+
+      console.log("✓ Brown noise playing");
+    } catch (error) {
+      console.error("Error playing brown noise:", error);
+    }
+  }
+
+  // Stop brown noise
+  stopBrownNoise(): void {
+    try {
+      const source = (this as any).brownNoiseSource;
+      if (source) {
+        source.stop();
+        (this as any).brownNoiseSource = null;
+        (this as any).brownNoiseGain = null;
+        console.log("✓ Brown noise stopped");
+      }
+    } catch (error) {
+      console.error("Error stopping brown noise:", error);
+    }
+  }
+
+  // Set brown noise volume
+  setBrownNoiseVolume(volume: number): void {
+    const gainNode = (this as any).brownNoiseGain;
+    if (gainNode) {
+      gainNode.gain.value = Math.max(0, Math.min(1, volume / 100));
+    }
   }
 }
 

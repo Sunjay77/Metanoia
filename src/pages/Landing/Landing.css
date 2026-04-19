@@ -33,14 +33,6 @@
   background: var(--surface-container-low);
 }
 
-.header-sounds-btn {
-  position: absolute;
-  right: 1.5rem;
-  top: 0;
-  color: var(--primary);
-  font-size: 1.5rem;
-}
-
 .app-header h1 {
   font-size: 2rem;
   font-weight: 600;
@@ -75,37 +67,52 @@
   padding: 0 1.5rem;
 }
 
+.modes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
 .mode-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.25rem;
+  justify-content: center;
+  padding: 0;
   background: var(--surface-container-lowest);
-  border-left: 3px solid var(--primary);
-  border-radius: var(--radius-md);
+  border: 2px solid var(--outline-variant);
+  border-radius: 12px;
   cursor: pointer;
   transition: var(--transition);
+  grid-column: span 1;
+  aspect-ratio: 1;
+  min-height: 140px;
 }
 
 .mode-card:hover {
-  background: var(--surface-container-low);
+  background: var(--surface-container-high);
+  border-color: var(--primary);
 }
 
 .mode-icon {
-  min-width: 2.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  min-width: unset;
+  width: auto;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 3rem;
   font-weight: 600;
   color: var(--primary);
   flex-shrink: 0;
 }
 
 .mode-content {
-  flex: 1;
+  display: none;
+}
+
+.mode-arrow {
+  display: none;
 }
 
 .mode-label {
@@ -114,7 +121,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
-  display: block;
+  display: none;
   margin-bottom: 0.25rem;
 }
 
@@ -123,12 +130,14 @@
   font-weight: 600;
   color: var(--primary);
   margin: 0;
+  display: none;
 }
 
 .mode-card p {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin: 0.25rem 0 0 0;
+  display: none;
 }
 
 .mode-arrow {
@@ -137,13 +146,119 @@
   flex-shrink: 0;
 }
 
+/* Utility Buttons - Square Sound Card */
+.mode-square {
+  grid-column: span 1;
+  border: 2px solid var(--outline-variant);
+  border-radius: 12px;
+  padding: 0;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-container-low);
+  position: relative;
+}
+
+.mode-square .mode-icon {
+  min-width: unset;
+  width: auto;
+  height: auto;
+  font-size: 3rem;
+  color: var(--primary);
+}
+
+.mode-square .mode-content,
+.mode-square .mode-arrow {
+  display: none;
+}
+
+.mode-square:hover {
+  background: var(--surface-container-high);
+  border-color: var(--primary);
+}
+
+.mode-square.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: pulse-sound 2s infinite;
+}
+
+.mode-square.active .mode-icon {
+  color: white;
+}
+
+@keyframes pulse-sound {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.utility-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: var(--transition);
+  width: 48px;
+  height: 48px;
+}
+
+.utility-btn:hover {
+  background: var(--surface-container-high);
+  border-color: var(--primary);
+}
+
+.utility-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.brown-noise-btn.active {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Mode Cards - All unified styling */
+
 @media (max-width: 640px) {
   .app-header h1 {
     font-size: 1.5rem;
   }
 
+  .modes-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .mode-card {
     padding: 1rem;
+    grid-column: span 2;
+  }
+
+  .mode-square {
+    grid-column: span 1;
+    aspect-ratio: auto;
+    min-height: 120px;
   }
 
   .mode-icon {

@@ -18,12 +18,16 @@ export function Pomodoro({
   const {
     workDuration,
     breakDuration,
+    alarmEnabled,
+    alarmVolume,
     isRunning,
     timeLeft,
     isWorkSession,
     sessionsCompleted,
     setWorkDuration,
     setBreakDuration,
+    setAlarmEnabled,
+    setAlarmVolume,
     startSession,
     pauseSession,
     resumeSession,
@@ -36,6 +40,8 @@ export function Pomodoro({
   const [showBreakNotice, setShowBreakNotice] = useState(false);
   const [tempWorkDuration, setTempWorkDuration] = useState(workDuration);
   const [tempBreakDuration, setTempBreakDuration] = useState(breakDuration);
+  const [tempAlarmEnabled, setTempAlarmEnabled] = useState(alarmEnabled);
+  const [tempAlarmVolume, setTempAlarmVolume] = useState(alarmVolume);
 
   // Timer effect
   useEffect(() => {
@@ -49,20 +55,24 @@ export function Pomodoro({
   // Play alarm and show break notice when work session completes
   useEffect(() => {
     if (!isRunning && timeLeft === 0 && isWorkSession) {
-      // Play alarm sound when work session completes
-      audioManager.playAlarm();
+      // Play alarm sound when work session completes if enabled
+      if (alarmEnabled) {
+        audioManager.playAlarmWithVolume(alarmVolume);
+      }
       // Show break notice instead of auto-starting break
       setShowBreakNotice(true);
     }
-  }, [isRunning, timeLeft, isWorkSession]);
+  }, [isRunning, timeLeft, isWorkSession, alarmEnabled, alarmVolume]);
 
   // Play alarm when break ends
   useEffect(() => {
     if (!isRunning && timeLeft === 0 && !isWorkSession) {
-      // Play alarm sound when break ends
-      audioManager.playAlarm();
+      // Play alarm sound when break ends if enabled
+      if (alarmEnabled) {
+        audioManager.playAlarmWithVolume(alarmVolume);
+      }
     }
-  }, [isRunning, timeLeft, isWorkSession]);
+  }, [isRunning, timeLeft, isWorkSession, alarmEnabled, alarmVolume]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -94,6 +104,8 @@ export function Pomodoro({
   const handleSaveSettings = () => {
     setWorkDuration(tempWorkDuration);
     setBreakDuration(tempBreakDuration);
+    setAlarmEnabled(tempAlarmEnabled);
+    setAlarmVolume(tempAlarmVolume);
     setShowSettings(false);
   };
 
@@ -268,6 +280,37 @@ export function Pomodoro({
                   </button>
                 </div>
               </div>
+
+              <div className="settings-group">
+                <label>Alarm Settings</label>
+                <div className="alarm-toggle">
+                  <input
+                    type="checkbox"
+                    id="alarm-enabled"
+                    checked={tempAlarmEnabled}
+                    onChange={(e) => setTempAlarmEnabled(e.target.checked)}
+                    className="checkbox-input"
+                  />
+                  <label htmlFor="alarm-enabled" className="checkbox-label">
+                    Enable Alarm
+                  </label>
+                </div>
+              </div>
+
+              {tempAlarmEnabled && (
+                <div className="settings-group">
+                  <label htmlFor="alarm-volume">Alarm Volume ({tempAlarmVolume}%)</label>
+                  <input
+                    id="alarm-volume"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={tempAlarmVolume}
+                    onChange={(e) => setTempAlarmVolume(Number(e.target.value))}
+                    className="volume-slider"
+                  />
+                </div>
+              )}
 
               <div className="settings-actions">
                 <button
