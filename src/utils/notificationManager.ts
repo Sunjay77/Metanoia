@@ -32,8 +32,6 @@ export class NotificationManager {
               title,
               body,
               id,
-              smallIcon: "ic_stat_icon_config_sample",
-              iconColor: "#d4a574", // Primary color from design system
             },
           ],
         });
@@ -44,7 +42,6 @@ export class NotificationManager {
         // Fall back to browser Notification API for web
         new Notification(title, {
           body,
-          icon: "/icons/icon-192x192.png",
           tag: `notification-${id}`,
         });
       }
