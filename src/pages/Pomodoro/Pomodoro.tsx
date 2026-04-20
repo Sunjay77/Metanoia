@@ -48,11 +48,25 @@ export function Pomodoro({
   // Initialize notifications on component mount
   useEffect(() => {
     const initializeNotifications = async () => {
+      // Always initialize the notification manager
       await notificationManager.initialize();
+
+      // Check current permission status
       const hasPermission = await notificationManager.checkPermissions();
+      console.log("Notification permission status:", hasPermission);
       setNotificationsEnabled(hasPermission);
+
+      // On Android, automatically request permission if not already granted
+      if (!hasPermission && (window as any).cordova) {
+        console.log("Requesting notification permissions...");
+        const granted = await notificationManager.requestPermissions();
+        setNotificationsEnabled(granted);
+        console.log("Permission request result:", granted);
+      }
     };
-    initializeNotifications();
+    initializeNotifications().catch((err) =>
+      console.error("Notification init error:", err),
+    );
   }, []);
 
   const handleRequestNotificationPermission = async () => {
@@ -401,13 +415,25 @@ export function Pomodoro({
                     </span>
                   </div>
                 ) : (
-                  <button
-                    className="control-btn control-btn-primary"
-                    onClick={handleRequestNotificationPermission}
-                    style={{ width: "100%" }}
-                  >
-                    Enable Notifications
-                  </button>
+                  <div>
+                    <button
+                      className="control-btn control-btn-primary"
+                      onClick={handleRequestNotificationPermission}
+                      style={{ width: "100%" }}
+                    >
+                      📱 Enable Notifications
+                    </button>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        color: "#999",
+                        marginTop: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      Tap to grant permission for timer alerts
+                    </p>
+                  </div>
                 )}
               </div>
 
