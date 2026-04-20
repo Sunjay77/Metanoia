@@ -55,6 +55,11 @@ export function Pomodoro({
     initializeNotifications();
   }, []);
 
+  const handleRequestNotificationPermission = async () => {
+    const hasPermission = await notificationManager.requestPermissions();
+    setNotificationsEnabled(hasPermission);
+  };
+
   // Timer effect
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -386,6 +391,25 @@ export function Pomodoro({
                   />
                 </div>
               )}
+
+              <div className="settings-group">
+                <label>Notifications</label>
+                {notificationsEnabled ? (
+                  <div className="alarm-toggle" style={{ opacity: 0.7 }}>
+                    <span className="checkbox-label">
+                      ✓ Notifications Enabled
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    className="control-btn control-btn-primary"
+                    onClick={handleRequestNotificationPermission}
+                    style={{ width: "100%" }}
+                  >
+                    Enable Notifications
+                  </button>
+                )}
+              </div>
 
               <div className="settings-actions">
                 <button

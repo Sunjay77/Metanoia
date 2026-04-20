@@ -2,12 +2,10 @@
   <!-- White background -->
   <rect width="192" height="192" fill="white"/>
   
-  <!-- Caligraphic M in golden/primary color -->
-  <text x="96" y="140" 
-        font-family="Georgia, serif" 
-        font-size="120" 
-        font-weight="bold"
-        text-anchor="middle" 
-        fill="#d4a574"
-        style="font-style: italic;">M</text>
+  <!-- Caligraphic M using paths -->
+  <g transform="translate(96, 96)">
+    <!-- M shape in golden color -->
+    <path d="M -35 30 L -35 -40 L -10 20 L 10 -40 L 35 30 M -35 -40 L 0 -10 L 35 -40" 
+          fill="none" stroke="#d4a574" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>
