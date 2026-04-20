@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { usePomodoro } from "@/store/pomodoro/pomodoroStore";
 import { BottomNav } from "@/components/common/BottomNav";
 import { audioManager } from "@/utils/audioManager";
+import { notificationManager } from "@/utils/notificationManager";
 import "./Pomodoro.css";
 
 interface PomodoroProps {
@@ -44,17 +45,14 @@ export function Pomodoro({
   const [tempAlarmVolume, setTempAlarmVolume] = useState(alarmVolume);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-  // Request notification permissions on component mount
+  // Initialize notifications on component mount
   useEffect(() => {
-    if ("Notification" in window) {
-      if (Notification.permission === "granted") {
-        setNotificationsEnabled(true);
-      } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then((permission) => {
-          setNotificationsEnabled(permission === "granted");
-        });
-      }
-    }
+    const initializeNotifications = async () => {
+      await notificationManager.initialize();
+      const hasPermission = await notificationManager.checkPermissions();
+      setNotificationsEnabled(hasPermission);
+    };
+    initializeNotifications();
   }, []);
 
   // Timer effect
@@ -104,13 +102,12 @@ export function Pomodoro({
       if (alarmEnabled) {
         audioManager.playAlarmWithVolume(alarmVolume);
       }
-      // Show browser notification
+      // Show notification on both web and Android APK
       if (notificationsEnabled) {
-        new Notification("Work Session Complete! 🎉", {
-          body: `Great work! Time for a ${breakDuration} minute break.`,
-          icon: "/icons/icon-192x192.png",
-          tag: "pomodoro-work-complete",
-        });
+        notificationManager.showNotification(
+          "Work Session Complete! 🎉",
+          `Great work! Time for a ${breakDuration} minute break.`,
+        );
       }
       // Show break notice instead of auto-starting break
       setShowBreakNotice(true);
@@ -132,13 +129,12 @@ export function Pomodoro({
       if (alarmEnabled) {
         audioManager.playAlarmWithVolume(alarmVolume);
       }
-      // Show browser notification
+      // Show notification on both web and Android APK
       if (notificationsEnabled) {
-        new Notification("Break Complete! ⏰", {
-          body: `Time to get back to work for another ${workDuration} minute session.`,
-          icon: "/icons/icon-192x192.png",
-          tag: "pomodoro-break-complete",
-        });
+        notificationManager.showNotification(
+          "Break Complete! ⏰",
+          `Time to get back to work for another ${workDuration} minute session.`,
+        );
       }
     }
   }, [
