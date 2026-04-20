@@ -5,7 +5,6 @@ export class AudioManager {
   private audioContext: AudioContext | null = null;
   private noiseGainNode: GainNode | null = null;
   private noiseBufferSource: AudioBufferSourceNode | null = null;
-  private rainGainNode: GainNode | null = null;
 
   // Get the base path for audio files (works in both web and APK builds)
   private getSoundPath(soundType: "brown-noise" | "rain"): string {
