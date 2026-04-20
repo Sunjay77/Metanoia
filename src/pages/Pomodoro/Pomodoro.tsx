@@ -43,11 +43,6 @@ export function Pomodoro({
   const [tempAlarmEnabled, setTempAlarmEnabled] = useState(alarmEnabled);
   const [tempAlarmVolume, setTempAlarmVolume] = useState(alarmVolume);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [backgroundAudioEnabled, setBackgroundAudioEnabled] = useState(false);
-  const [backgroundAudioType, setBackgroundAudioType] = useState<
-    "brown-noise" | "rain"
-  >("brown-noise");
-  const [backgroundAudioVolume, setBackgroundAudioVolume] = useState(30);
 
   // Request notification permissions on component mount
   useEffect(() => {
@@ -71,27 +66,13 @@ export function Pomodoro({
     return () => clearInterval(interval);
   }, [isRunning, decrementTimeLeft]);
 
-  // Background audio effect - play/stop when session starts/stops
+  // Cleanup audio on unmount
   useEffect(() => {
-    if (backgroundAudioEnabled && isRunning) {
-      // Play background audio when session is running
-      audioManager.playSound(backgroundAudioType, backgroundAudioVolume);
-    } else {
-      // Stop background audio when session is paused or not running
-      audioManager.stopSound(backgroundAudioType);
-    }
-
-    // Cleanup on unmount
     return () => {
       audioManager.stopSound("brown-noise");
       audioManager.stopSound("rain");
     };
-  }, [
-    backgroundAudioEnabled,
-    isRunning,
-    backgroundAudioType,
-    backgroundAudioVolume,
-  ]);
+  }, []);
 
   // Play alarm and show break notice when work session completes
   useEffect(() => {
@@ -228,6 +209,12 @@ export function Pomodoro({
                 <div className="session-count">
                   Sessions completed: <span>{sessionsCompleted}</span>
                 </div>
+
+                {notificationsEnabled && (
+                  <div className="notification-status">
+                    <span className="status-badge">🔔 Notifications On</span>
+                  </div>
+                )}
               </div>
 
               <div className="controls">
@@ -385,62 +372,6 @@ export function Pomodoro({
                     className="volume-slider"
                   />
                 </div>
-              )}
-
-              <div className="settings-group">
-                <label>Background Ambience</label>
-                <div className="alarm-toggle">
-                  <input
-                    type="checkbox"
-                    id="bg-audio-enabled"
-                    checked={backgroundAudioEnabled}
-                    onChange={(e) =>
-                      setBackgroundAudioEnabled(e.target.checked)
-                    }
-                    className="checkbox-input"
-                  />
-                  <label htmlFor="bg-audio-enabled" className="checkbox-label">
-                    Enable Background Audio
-                  </label>
-                </div>
-              </div>
-
-              {backgroundAudioEnabled && (
-                <>
-                  <div className="settings-group">
-                    <label htmlFor="bg-audio-type">Ambience Type</label>
-                    <select
-                      id="bg-audio-type"
-                      value={backgroundAudioType}
-                      onChange={(e) =>
-                        setBackgroundAudioType(
-                          e.target.value as "brown-noise" | "rain",
-                        )
-                      }
-                      className="select-input"
-                    >
-                      <option value="brown-noise">Brown Noise (Smooth)</option>
-                      <option value="rain">Rain Sounds</option>
-                    </select>
-                  </div>
-
-                  <div className="settings-group">
-                    <label htmlFor="bg-audio-volume">
-                      Ambience Volume ({backgroundAudioVolume}%)
-                    </label>
-                    <input
-                      id="bg-audio-volume"
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={backgroundAudioVolume}
-                      onChange={(e) =>
-                        setBackgroundAudioVolume(Number(e.target.value))
-                      }
-                      className="volume-slider"
-                    />
-                  </div>
-                </>
               )}
 
               <div className="settings-actions">
