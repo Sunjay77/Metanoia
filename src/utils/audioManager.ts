@@ -1,9 +1,11 @@
-// Simple HTML5 Audio Manager - Creates audio elements on demand with crossfade looping
+// Audio Manager with Web Audio API support for seamless procedural noise
 export class AudioManager {
   private currentAudio: HTMLAudioElement | null = null;
-  private nextAudio: HTMLAudioElement | null = null;
   private currentType: "brown-noise" | "rain" | null = null;
-  private fadeInterval: number | null = null;
+  private audioContext: AudioContext | null = null;
+  private noiseGainNode: GainNode | null = null;
+  private noiseBufferSource: AudioBufferSourceNode | null = null;
+  private rainGainNode: GainNode | null = null;
 
   // Get the base path for audio files (works in both web and APK builds)
   private getSoundPath(soundType: "brown-noise" | "rain"): string {
@@ -13,185 +15,184 @@ export class AudioManager {
     // Try multiple paths to support different build environments:
     // 1. Absolute path - works in dev and most web builds
     // 2. Relative path - works in Cordova/APK builds
-    // The browser will try each path and the error handler will log if all fail
-
-    // For Cordova APK builds, we need to check if we're in a mobile app
-    // and use the correct base URL
     if ((window as any).cordova) {
-      // Running in Cordova app - use relative path from root
       return `./sounds/${soundFile}`;
     }
-
-    // Web build - use absolute path
     return `/sounds/${soundFile}`;
   }
 
+  // Generate brown noise using Web Audio API
+  private generateBrownNoise(
+    audioContext: AudioContext,
+    duration: number = 10,
+  ): AudioBuffer {
+    const sampleRate = audioContext.sampleRate;
+    const length = sampleRate * duration;
+    const buffer = audioContext.createBuffer(1, length, sampleRate);
+    const data = buffer.getChannelData(0);
+
+    let lastOut = 0;
+    for (let i = 0; i < length; i++) {
+      const white = Math.random() * 2 - 1;
+      data[i] = (lastOut + 0.02 * white) / 1.02;
+      lastOut = data[i];
+      data[i] *= 3.5; // Amplify to prevent it being too quiet
+    }
+    return buffer;
+  }
+
   playSound(soundType: "brown-noise" | "rain", volume: number = 0.5): void {
-    // Stop the currently playing sound
-    if (this.currentAudio) {
-      this.currentAudio.pause();
-      this.currentAudio.src = "";
-    }
-    if (this.nextAudio) {
-      this.nextAudio.pause();
-      this.nextAudio.src = "";
-    }
-    if (this.fadeInterval) {
-      clearInterval(this.fadeInterval);
-      this.fadeInterval = null;
-    }
-
-    // Get the appropriate sound file
-    const soundFile = this.getSoundPath(soundType);
-
-    // Create new audio element
-    const audio = new Audio();
-    audio.src = soundFile;
-    audio.loop = false;
-    audio.volume = Math.max(0, Math.min(1, volume / 100));
+    // Stop any currently playing sound
+    this.stopSound(soundType);
 
     const normalizedVolume = Math.max(0, Math.min(1, volume / 100));
 
-    // Setup event listeners
-    let hasRetried = false;
-    audio.addEventListener("error", () => {
-      console.error(`✗ Failed to load ${soundType} from ${soundFile}`);
+    if (soundType === "brown-noise") {
+      // Use Web Audio API for brown noise - no clicks/pops from looping!
+      try {
+        this.audioContext =
+          this.audioContext ||
+          new (window.AudioContext || (window as any).webkitAudioContext)();
 
-      // If Cordova app and first path failed, try alternative paths
-      if ((window as any).cordova && !hasRetried) {
-        hasRetried = true;
-        console.log(`Retrying with alternative path...`);
-        // Try alternative path
-        audio.src = `./sounds/${soundType === "brown-noise" ? "brown_noise.mp3" : "rain_sound.mp3"}`;
-        audio.play().catch(() => {
-          console.error(`All paths failed for ${soundType}`);
-        });
+        // Create gain node for volume control
+        this.noiseGainNode = this.audioContext.createGain();
+        this.noiseGainNode.gain.value = normalizedVolume;
+        this.noiseGainNode.connect(this.audioContext.destination);
+
+        // Generate brown noise buffer (10 seconds)
+        const buffer = this.generateBrownNoise(this.audioContext, 10);
+
+        // Create looping buffer source for seamless playback
+        this.noiseBufferSource = this.audioContext.createBufferSource();
+        this.noiseBufferSource.buffer = buffer;
+        this.noiseBufferSource.loop = true; // Loop the generated buffer
+        this.noiseBufferSource.connect(this.noiseGainNode);
+        this.noiseBufferSource.start(0);
+
+        this.currentType = soundType;
+        console.log("✓ Playing brown noise (procedural, no clicks)");
+      } catch (error) {
+        console.error("Error playing brown noise:", error);
       }
-    });
+    } else {
+      // Use HTML5 Audio for rain sound
+      // Stop the currently playing audio
+      if (this.currentAudio) {
+        this.currentAudio.pause();
+        this.currentAudio.src = "";
+      }
 
-    audio.addEventListener("play", () => {
-      console.log(`✓ Playing ${soundType}`);
-    });
+      const soundFile = this.getSoundPath(soundType);
+      const audio = new Audio();
+      audio.src = soundFile;
+      audio.loop = true;
+      audio.volume = normalizedVolume;
 
-    // Crossfade looping: restart with fade before audio ends
-    audio.addEventListener("timeupdate", () => {
-      if (
-        this.currentType === soundType &&
-        this.currentAudio === audio &&
-        audio.duration - audio.currentTime < 0.5 // Start fade 500ms before end
-      ) {
-        // Only create next audio if it doesn't exist yet
-        if (!this.nextAudio) {
-          const nextAudio = new Audio();
-          nextAudio.src = soundFile;
-          nextAudio.loop = false;
-          nextAudio.volume = 0; // Start at 0 for crossfade
-          this.nextAudio = nextAudio;
+      // Setup event listeners
+      let hasRetried = false;
+      audio.addEventListener("error", () => {
+        console.error(`✗ Failed to load ${soundType} from ${soundFile}`);
 
-          // Start playing the next instance
-          nextAudio.play().catch(() => {
-            // Silently ignore
+        if ((window as any).cordova && !hasRetried) {
+          hasRetried = true;
+          console.log(`Retrying with alternative path...`);
+          audio.src = `./sounds/rain_sound.mp3`;
+          audio.play().catch(() => {
+            console.error(`All paths failed for ${soundType}`);
           });
-
-          // Crossfade: fade out current, fade in next
-          let fadeStep = 0;
-          this.fadeInterval = setInterval(() => {
-            fadeStep++;
-            const fadeProgress = Math.min(fadeStep / 10, 1); // 100ms fade
-
-            // Fade out current
-            audio.volume = normalizedVolume * (1 - fadeProgress);
-            // Fade in next
-            nextAudio.volume = normalizedVolume * fadeProgress;
-
-            if (fadeProgress >= 1) {
-              // Fade complete
-              if (this.fadeInterval) {
-                clearInterval(this.fadeInterval);
-                this.fadeInterval = null;
-              }
-
-              // Pause and reset old audio
-              audio.pause();
-              audio.src = "";
-
-              // Make next audio the current
-              this.currentAudio = nextAudio;
-              this.nextAudio = null;
-            }
-          }, 10); // Update every 10ms for smooth fade
         }
-      }
-    });
+      });
 
-    // Fallback: if ended event fires, restart
-    audio.addEventListener("ended", () => {
-      if (this.currentType === soundType && this.currentAudio === audio) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {
-          // Silently ignore
-        });
-      }
-    });
+      audio.addEventListener("play", () => {
+        console.log(`✓ Playing ${soundType}`);
+      });
 
-    // Store reference and play
-    this.currentAudio = audio;
-    this.currentType = soundType;
+      this.currentAudio = audio;
+      this.currentType = soundType;
 
-    try {
-      const playPromise = audio.play();
-      if (playPromise) {
-        playPromise.catch((err) => {
-          console.error(`Error playing ${soundType}:`, err);
-        });
+      try {
+        const playPromise = audio.play();
+        if (playPromise) {
+          playPromise.catch((err) => {
+            console.error(`Error playing ${soundType}:`, err);
+          });
+        }
+      } catch (error) {
+        console.error(`Exception playing ${soundType}:`, error);
       }
-    } catch (error) {
-      console.error(`Exception playing ${soundType}:`, error);
     }
   }
 
   stopSound(soundType: "brown-noise" | "rain"): void {
-    if (this.currentType === soundType && this.currentAudio) {
-      if (this.fadeInterval) {
-        clearInterval(this.fadeInterval);
-        this.fadeInterval = null;
-      }
-      this.currentAudio.pause();
-      this.currentAudio.src = "";
-      this.currentAudio = null;
-      if (this.nextAudio) {
-        this.nextAudio.pause();
-        this.nextAudio.src = "";
-        this.nextAudio = null;
+    if (this.currentType === soundType) {
+      if (soundType === "brown-noise") {
+        // Stop Web Audio API brown noise
+        if (this.noiseBufferSource) {
+          try {
+            this.noiseBufferSource.stop();
+          } catch (e) {
+            // Already stopped
+          }
+          this.noiseBufferSource = null;
+        }
+        if (this.noiseGainNode) {
+          this.noiseGainNode.disconnect();
+          this.noiseGainNode = null;
+        }
+      } else {
+        // Stop HTML5 audio rain sound
+        if (this.currentAudio) {
+          this.currentAudio.pause();
+          this.currentAudio.src = "";
+          this.currentAudio = null;
+        }
       }
       this.currentType = null;
     }
   }
 
   setVolume(soundType: "brown-noise" | "rain", volume: number): void {
-    if (this.currentType === soundType && this.currentAudio) {
-      this.currentAudio.volume = Math.max(0, Math.min(1, volume / 100));
-      // Also update nextAudio if it exists and is fading in
-      if (this.nextAudio && this.nextAudio.volume > 0) {
-        this.nextAudio.volume = Math.max(0, Math.min(1, volume / 100));
+    const normalizedVolume = Math.max(0, Math.min(1, volume / 100));
+
+    if (this.currentType === soundType) {
+      if (soundType === "brown-noise") {
+        // Update Web Audio API brown noise volume
+        if (this.noiseGainNode) {
+          this.noiseGainNode.gain.setValueAtTime(
+            normalizedVolume,
+            this.audioContext?.currentTime || 0,
+          );
+        }
+      } else {
+        // Update HTML5 audio rain sound volume
+        if (this.currentAudio) {
+          this.currentAudio.volume = normalizedVolume;
+        }
       }
     }
   }
 
   stopAll(): void {
-    if (this.fadeInterval) {
-      clearInterval(this.fadeInterval);
-      this.fadeInterval = null;
+    // Stop brown noise if playing
+    if (this.currentType === "brown-noise") {
+      if (this.noiseBufferSource) {
+        try {
+          this.noiseBufferSource.stop();
+        } catch (e) {
+          // Already stopped
+        }
+        this.noiseBufferSource = null;
+      }
+      if (this.noiseGainNode) {
+        this.noiseGainNode.disconnect();
+        this.noiseGainNode = null;
+      }
     }
+    // Stop rain sound if playing
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.src = "";
       this.currentAudio = null;
-    }
-    if (this.nextAudio) {
-      this.nextAudio.pause();
-      this.nextAudio.src = "";
-      this.nextAudio = null;
     }
     this.currentType = null;
   }
@@ -263,93 +264,18 @@ export class AudioManager {
 
   // Generate brown noise using Web Audio API with enhanced smoothness
   playBrownNoise(volume: number = 0.4): void {
-    try {
-      const audioContext = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
-
-      // Create larger buffer for better brown noise quality
-      const bufferSize = 16384;
-      const brownNoiseBuffer = audioContext.createBuffer(
-        1,
-        bufferSize,
-        audioContext.sampleRate
-      );
-      const brownNoiseOutput = brownNoiseBuffer.getChannelData(0);
-
-      // Generate enhanced brown noise with multiple filtering passes
-      let lastOut = 0;
-      let lastLastOut = 0;
-      
-      for (let i = 0; i < bufferSize; i++) {
-        // White noise
-        const white = Math.random() * 2 - 1;
-        
-        // Apply multiple poles of filtering for smoother brown noise
-        // Using cascaded integrators for better smoothing
-        const filtered1 = (lastOut + 0.02 * white) / 1.02;
-        const filtered2 = (lastLastOut + 0.01 * filtered1) / 1.01;
-        
-        brownNoiseOutput[i] = filtered2;
-        lastLastOut = lastOut;
-        lastOut = filtered2;
-      }
-
-      // Normalize the signal
-      let max = 0;
-      for (let i = 0; i < bufferSize; i++) {
-        max = Math.max(max, Math.abs(brownNoiseOutput[i]));
-      }
-      if (max > 0) {
-        for (let i = 0; i < bufferSize; i++) {
-          brownNoiseOutput[i] = (brownNoiseOutput[i] / max) * 0.85;
-        }
-      }
-
-      // Create a source from the brown noise buffer and loop it
-      const source = audioContext.createBufferSource();
-      const gainNode = audioContext.createGain();
-
-      source.buffer = brownNoiseBuffer;
-      source.loop = true;
-      gainNode.gain.value = Math.max(0, Math.min(1, volume / 100));
-
-      source.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      source.start(0);
-
-      // Store the source and gain for later control
-      (this as any).brownNoiseSource = source;
-      (this as any).brownNoiseGain = gainNode;
-
-      console.log("✓ Brown noise playing");
-    } catch (error) {
-      console.error("Error playing brown noise:", error);
-    }
+    // Use the main playSound method instead
+    this.playSound("brown-noise", volume * 100);
   }
 
   // Stop brown noise
   stopBrownNoise(): void {
-    try {
-      const source = (this as any).brownNoiseSource;
-      if (source) {
-        source.stop();
-        (this as any).brownNoiseSource = null;
-        (this as any).brownNoiseGain = null;
-        console.log("✓ Brown noise stopped");
-      }
-    } catch (error) {
-      console.error("Error stopping brown noise:", error);
-    }
+    this.stopSound("brown-noise");
   }
 
   // Set brown noise volume
   setBrownNoiseVolume(volume: number): void {
-    const gainNode = (this as any).brownNoiseGain;
-    if (gainNode) {
-      gainNode.gain.value = Math.max(0, Math.min(1, volume / 100));
-    }
+    this.setVolume("brown-noise", volume);
   }
 }
 
