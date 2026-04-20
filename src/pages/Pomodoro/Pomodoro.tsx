@@ -228,12 +228,6 @@ export function Pomodoro({
                 <div className="session-count">
                   Sessions completed: <span>{sessionsCompleted}</span>
                 </div>
-
-                {notificationsEnabled && (
-                  <div className="notification-status">
-                    <span className="status-badge">🔔 Notifications On</span>
-                  </div>
-                )}
               </div>
 
               <div className="controls">
