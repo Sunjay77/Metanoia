@@ -1,0 +1,39 @@
+{
+  "name": "Metanoia",
+  "short_name": "Metanoia",
+  "description": "A productivity app for managing tasks, brain dumps, and time with Pomodoro timer",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#d4a574",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/metanoia-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/metanoia-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/metanoia-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity"],
+  "screenshots": [
+    {
+      "src": "/icons/metanoia-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
