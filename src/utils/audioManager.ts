@@ -5,6 +5,7 @@ export class AudioManager {
   private audioContext: AudioContext | null = null;
   private noiseGainNode: GainNode | null = null;
   private noiseBufferSource: AudioBufferSourceNode | null = null;
+  private mediaSessionSupported = "mediaSession" in navigator;
 
   // Get the base path for audio files (works in both web and APK builds)
   private getSoundPath(soundType: "brown-noise" | "rain"): string {
@@ -18,6 +19,61 @@ export class AudioManager {
       return `./sounds/${soundFile}`;
     }
     return `/sounds/${soundFile}`;
+  }
+
+  // Setup Media Session for notification controls
+  private setupMediaSession(
+    title: string,
+    artist: string = "Metanoia",
+    isPlaying: boolean = true,
+  ): void {
+    if (!this.mediaSessionSupported) return;
+
+    try {
+      const mediaSession = navigator.mediaSession;
+
+      // Set metadata for notification
+      mediaSession.metadata = new MediaMetadata({
+        title,
+        artist,
+        album: "Productivity Timer",
+        artwork: [
+          {
+            src: "/icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      });
+
+      // Set playback state
+      mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+      // Setup action handlers (these handle notification controls)
+      mediaSession.setActionHandler("play", () => {
+        // Will be overridden by Pomodoro component
+      });
+
+      mediaSession.setActionHandler("pause", () => {
+        // Will be overridden by Pomodoro component
+      });
+    } catch (error) {
+      console.log("Media Session not fully supported");
+    }
+  }
+
+  // Update media session playback state and notification
+  updateMediaSession(
+    title: string,
+    isPlaying: boolean = true,
+    artist: string = "Metanoia",
+  ): void {
+    this.setupMediaSession(title, artist, isPlaying);
   }
 
   // Generate brown noise using Web Audio API

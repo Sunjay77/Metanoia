@@ -24,7 +24,7 @@ export function Tasks({
         >
           ←
         </button>
-        <h1>Tasks</h1>
+        <h1>Memory</h1>
         <div className="header-actions"></div>
       </header>
       <main className="app-main">

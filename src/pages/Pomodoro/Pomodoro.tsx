@@ -66,6 +66,29 @@ export function Pomodoro({
     return () => clearInterval(interval);
   }, [isRunning, decrementTimeLeft]);
 
+  // Update Media Session notification with current timer
+  useEffect(() => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const formattedTime = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    if (isRunning && notificationsEnabled) {
+      const sessionLabel = isWorkSession ? "Work" : "Break";
+      audioManager.updateMediaSession(
+        `${sessionLabel} Timer: ${formattedTime}`,
+        true,
+        `${sessionLabel} Session`,
+      );
+    } else if (notificationsEnabled && timeLeft > 0) {
+      const sessionLabel = isWorkSession ? "Work" : "Break";
+      audioManager.updateMediaSession(
+        `${sessionLabel} Timer: ${formattedTime}`,
+        false,
+        `${sessionLabel} Session (Paused)`,
+      );
+    }
+  }, [isRunning, timeLeft, isWorkSession, notificationsEnabled]);
+
   // Cleanup audio on unmount
   useEffect(() => {
     return () => {

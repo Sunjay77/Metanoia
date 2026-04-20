@@ -21,7 +21,6 @@ export function TodoInput() {
         onChange={(e) => setInput(e.target.value)}
         placeholder="What needs to be done?"
         className="todo-input"
-        autoFocus
       />
       <button type="submit" className="add-button">
         + Add

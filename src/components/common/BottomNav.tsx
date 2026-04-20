@@ -16,10 +16,10 @@ export function BottomNav({
       <button
         className={`nav-item ${activeMode === "tasks" ? "nav-item-active" : ""}`}
         onClick={onTasksClick}
-        title="Tasks"
+        title="Memory"
       >
         <span className="nav-icon">✓</span>
-        <span className="nav-label">TASKS</span>
+        <span className="nav-label">MEMORY</span>
       </button>
       <button
         className={`nav-item ${activeMode === "brain-dump" ? "nav-item-active" : ""}`}
