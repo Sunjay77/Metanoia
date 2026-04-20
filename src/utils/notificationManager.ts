@@ -2,24 +2,38 @@
 import { LocalNotifications } from "@capacitor/local-notifications";
 
 export class NotificationManager {
-  private isNative =
-    (window as any).cordova !== undefined ||
-    (window as any).Capacitor !== undefined;
+  private isCordova = (window as any).cordova !== undefined;
+  private isCapacitor = (window as any).Capacitor !== undefined;
   private notificationId = 1000;
+
+  // Get Cordova notification plugin
+  private getCordovaNotification() {
+    return (window as any).cordova?.plugins?.notification?.local;
+  }
 
   async initialize(): Promise<void> {
     console.log("Initializing NotificationManager...");
-    console.log("Is Native/Cordova:", this.isNative);
+    console.log("Is Cordova:", this.isCordova);
+    console.log("Is Capacitor:", this.isCapacitor);
     console.log("window.cordova:", (window as any).cordova);
-    console.log("window.Capacitor:", (window as any).Capacitor);
 
-    if (this.isNative) {
+    if (this.isCordova) {
       try {
-        // Request notification permissions on Android
-        const result = await LocalNotifications.requestPermissions();
-        console.log("Notification permission result:", result);
+        // For Cordova, request permissions
+        const notification = this.getCordovaNotification();
+        if (notification && notification.requestPermission) {
+          notification.requestPermission();
+          console.log("Cordova notification permission requested");
+        }
       } catch (error) {
-        console.log("Notification permission request failed:", error);
+        console.log("Cordova initialization error:", error);
+      }
+    } else if (this.isCapacitor) {
+      try {
+        const result = await LocalNotifications.requestPermissions();
+        console.log("Capacitor permission result:", result);
+      } catch (error) {
+        console.log("Capacitor permission error:", error);
       }
     }
   }
@@ -30,9 +44,24 @@ export class NotificationManager {
     id: number = this.notificationId++,
   ): Promise<void> {
     try {
-      if (this.isNative) {
-        // Use Capacitor Local Notifications for Android/iOS APK
-        console.log("Showing native notification:", title);
+      if (this.isCordova) {
+        // Use Cordova Local Notifications plugin
+        const notification = this.getCordovaNotification();
+        if (notification) {
+          console.log("Showing Cordova notification:", title);
+          notification.schedule({
+            id: id,
+            title: title,
+            text: body,
+            foreground: true,
+            smallIcon: "ic_launcher", // Use the app icon
+          });
+        } else {
+          console.warn("Cordova notification plugin not available");
+        }
+      } else if (this.isCapacitor) {
+        // Use Capacitor Local Notifications for iOS
+        console.log("Showing Capacitor notification:", title);
         await LocalNotifications.schedule({
           notifications: [
             {
@@ -60,10 +89,18 @@ export class NotificationManager {
 
   async requestPermissions(): Promise<boolean> {
     try {
-      if (this.isNative) {
-        console.log("Requesting native notification permissions...");
+      if (this.isCordova) {
+        console.log("Requesting Cordova notification permissions...");
+        const notification = this.getCordovaNotification();
+        if (notification && notification.requestPermission) {
+          notification.requestPermission();
+          return true;
+        }
+        return true; // Assume granted for Cordova
+      } else if (this.isCapacitor) {
+        console.log("Requesting Capacitor notification permissions...");
         const result = await LocalNotifications.requestPermissions();
-        console.log("Native permission result:", result);
+        console.log("Capacitor permission result:", result);
         return result.display === "granted" || result.display === "prompt";
       } else if ("Notification" in window) {
         console.log("Requesting web notification permissions...");
@@ -80,9 +117,12 @@ export class NotificationManager {
 
   async checkPermissions(): Promise<boolean> {
     try {
-      if (this.isNative) {
+      if (this.isCordova) {
+        // Cordova plugin typically has permissions by default
+        return true;
+      } else if (this.isCapacitor) {
         const result = await LocalNotifications.checkPermissions();
-        console.log("Native permission check:", result);
+        console.log("Capacitor permission check:", result);
         return result.display === "granted";
       } else if ("Notification" in window) {
         const permission = Notification.permission === "granted";
@@ -98,7 +138,12 @@ export class NotificationManager {
 
   async cancelNotification(id: number): Promise<void> {
     try {
-      if (this.isNative) {
+      if (this.isCordova) {
+        const notification = this.getCordovaNotification();
+        if (notification && notification.cancel) {
+          notification.cancel(id);
+        }
+      } else if (this.isCapacitor) {
         await LocalNotifications.cancel({ notifications: [{ id }] });
       }
     } catch (error) {
@@ -108,7 +153,12 @@ export class NotificationManager {
 
   async cancelAllNotifications(): Promise<void> {
     try {
-      if (this.isNative) {
+      if (this.isCordova) {
+        const notification = this.getCordovaNotification();
+        if (notification && notification.cancelAll) {
+          notification.cancelAll();
+        }
+      } else if (this.isCapacitor) {
         // Cancel by getting all pending notifications
         const pending = await LocalNotifications.getPending();
         if (pending.notifications.length > 0) {

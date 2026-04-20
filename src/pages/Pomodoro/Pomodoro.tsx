@@ -56,8 +56,8 @@ export function Pomodoro({
       console.log("Notification permission status:", hasPermission);
       setNotificationsEnabled(hasPermission);
 
-      // On Android, automatically request permission if not already granted
-      if (!hasPermission && (window as any).cordova) {
+      // On Cordova/Android, automatically request permission if not already granted
+      if (!hasPermission) {
         console.log("Requesting notification permissions...");
         const granted = await notificationManager.requestPermissions();
         setNotificationsEnabled(granted);
