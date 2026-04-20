@@ -1,9 +1,15 @@
-#!/bin/bash
+ls ~/Library/Android/sdk/cmdline-tools/latest/bin/#!/bin/bash
 
 # Metonia APK Build Script
 # This script automates the APK building process
 
 set -e
+
+# Set Gradle from Android Studio FIRST
+export GRADLE_HOME="/Applications/Android Studio.app/Contents/gradle/gradle-8.9"
+export PATH=$GRADLE_HOME/bin:$PATH
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export ANDROID_HOME=$HOME/Library/Android/sdk
 
 echo "🚀 Starting Metonia APK Build..."
 echo ""
