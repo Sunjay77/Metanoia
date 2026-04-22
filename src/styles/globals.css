@@ -1,5 +1,8 @@
 @import "./variables.css";
 
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
@@ -39,10 +42,12 @@ body {
   flex: 1;
 }
 
-/* Base element styles */
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
 input,
 button {
-  font-family: "Lucida Sans", inherit;
+  font-family: inherit;
   font-size: inherit;
 }
 
@@ -51,20 +56,30 @@ button {
   background: none;
   border: none;
   cursor: pointer;
+  transition: var(--transition);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 input[type="text"],
-input[type="checkbox"] {
-  font-family: "Inter", inherit;
+input[type="checkbox"],
+textarea {
+  font-family: inherit;
 }
 
-/* App Container Styles */
+/* ============================================
+   LAYOUT CONTAINERS
+   ============================================ */
 .app {
   min-height: 100vh;
   background: var(--surface);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  padding-bottom: 90px;
 }
 
 .app-main {
@@ -72,9 +87,12 @@ input[type="checkbox"] {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
+  padding-bottom: 20px;
 }
 
-/* Bottom Navigation - Fixed */
+/* ============================================
+   NAVIGATION - BOTTOM BAR
+   ============================================ */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -87,6 +105,8 @@ input[type="checkbox"] {
   background: var(--surface);
   border-top: 1px solid var(--outline-variant);
   width: 100%;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .nav-item {
@@ -98,6 +118,12 @@ input[type="checkbox"] {
   flex: 1;
   padding: 0.75rem;
   background: transparent;
+  pointer-events: auto;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-secondary);
+  pointer-events: auto;
   border: none;
   border-radius: 0;
   cursor: pointer;

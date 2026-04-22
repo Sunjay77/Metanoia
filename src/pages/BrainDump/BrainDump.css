@@ -72,23 +72,25 @@
 
 .unstructured-input {
   width: 100%;
-  min-height: 220px;
+  min-height: 350px;
   padding: 1rem;
   background: var(--surface-container-lowest);
-  border: none;
+  border: 2px solid var(--outline-variant);
   border-radius: var(--radius-md);
   font-family: "Lucida Sans", inherit;
   font-size: 1rem;
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.8;
   resize: vertical;
   transition: var(--transition);
+  max-height: 500px;
 }
 
 .unstructured-input:focus {
   outline: none;
   border-color: var(--primary);
   background: var(--surface-container-low);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
 }
 
 .unstructured-input::placeholder {
