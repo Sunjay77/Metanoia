@@ -35,7 +35,7 @@
 .timer-circle {
   width: 200px;
   height: 200px;
-  border-radius: 50%;
+  border-radius: 24px;
   background: linear-gradient(135deg, var(--primary), var(--primary-container));
   display: flex;
   align-items: center;
@@ -74,14 +74,14 @@
 }
 
 .control-btn {
-  padding: 0.75rem 1.5rem;
+  padding: var(--button-padding);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-height: 48px;
+  transition: var(--transition);
+  min-height: var(--button-height);
   flex: 1;
   min-width: 120px;
 }

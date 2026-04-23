@@ -73,11 +73,11 @@
 .unstructured-input {
   width: 100%;
   min-height: 350px;
-  padding: 1rem;
+  padding: var(--spacing-md);
   background: var(--surface-container-lowest);
   border: 2px solid var(--outline-variant);
   border-radius: var(--radius-md);
-  font-family: "Lucida Sans", inherit;
+  font-family: inherit;
   font-size: 1rem;
   color: var(--text-primary);
   line-height: 1.8;

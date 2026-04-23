@@ -106,14 +106,6 @@ export function Pomodoro({
     }
   }, [isRunning, timeLeft, isWorkSession, notificationsEnabled]);
 
-  // Cleanup audio on unmount
-  useEffect(() => {
-    return () => {
-      audioManager.stopSound("brown-noise");
-      audioManager.stopSound("rain");
-    };
-  }, []);
-
   // Play alarm and show break notice when work session completes
   useEffect(() => {
     if (!isRunning && timeLeft === 0 && isWorkSession) {
