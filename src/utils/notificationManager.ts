@@ -87,6 +87,43 @@ export class NotificationManager {
     }
   }
 
+  async scheduleNotification(
+    id: number,
+    title: string,
+    body: string,
+    when: Date,
+  ): Promise<void> {
+    try {
+      if (this.isCordova) {
+        const notification = this.getCordovaNotification();
+        if (notification) {
+          notification.schedule({
+            id,
+            title,
+            text: body,
+            foreground: true,
+            trigger: { at: when },
+            at: when,
+            smallIcon: "ic_launcher",
+          });
+        }
+      } else if (this.isCapacitor) {
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              id,
+              title,
+              body,
+              schedule: { at: when },
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      console.error("Error scheduling notification:", error);
+    }
+  }
+
   async requestPermissions(): Promise<boolean> {
     try {
       if (this.isCordova) {

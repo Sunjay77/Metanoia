@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePomodoro } from "@/store/pomodoro/pomodoroStore";
 import { BottomNav } from "@/components/common/BottomNav";
 import { audioManager } from "@/utils/audioManager";
@@ -34,6 +34,7 @@ export function Pomodoro({
     resumeSession,
     resetSession,
     decrementTimeLeft,
+    syncTimeLeft,
     startBreak,
   } = usePomodoro();
 
@@ -44,6 +45,9 @@ export function Pomodoro({
   const [tempAlarmEnabled, setTempAlarmEnabled] = useState(alarmEnabled);
   const [tempAlarmVolume, setTempAlarmVolume] = useState(alarmVolume);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const workNotificationId = useRef(3001);
+  const breakNotificationId = useRef(3002);
+  const prevIsRunning = useRef(isRunning);
 
   // Initialize notifications on component mount
   useEffect(() => {
@@ -82,6 +86,69 @@ export function Pomodoro({
     }
     return () => clearInterval(interval);
   }, [isRunning, decrementTimeLeft]);
+
+  // Schedule background notifications for session completion
+  useEffect(() => {
+    if (notificationsEnabled) {
+      if (isRunning && !prevIsRunning.current && timeLeft > 0) {
+        const endTime = new Date(Date.now() + timeLeft * 1000);
+        if (isWorkSession) {
+          notificationManager.scheduleNotification(
+            workNotificationId.current,
+            "Work Session Complete! 🎉",
+            `Great work! Time for a ${breakDuration} minute break.`,
+            endTime,
+          );
+        } else {
+          notificationManager.scheduleNotification(
+            breakNotificationId.current,
+            "Break Complete! ⏰",
+            `Time to get back to work for another ${workDuration} minute session.`,
+            endTime,
+          );
+        }
+      }
+
+      if (!isRunning && prevIsRunning.current) {
+        notificationManager.cancelNotification(workNotificationId.current);
+        notificationManager.cancelNotification(breakNotificationId.current);
+      }
+    }
+
+    prevIsRunning.current = isRunning;
+  }, [
+    isRunning,
+    timeLeft,
+    isWorkSession,
+    notificationsEnabled,
+    breakDuration,
+    workDuration,
+  ]);
+
+  // Catch up timer when app returns to foreground (mobile + web)
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        syncTimeLeft();
+      }
+    };
+
+    const handleResume = () => {
+      syncTimeLeft();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    if ((window as any).cordova) {
+      document.addEventListener("resume", handleResume);
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      if ((window as any).cordova) {
+        document.removeEventListener("resume", handleResume);
+      }
+    };
+  }, [syncTimeLeft]);
 
   // Update Media Session notification with current timer
   useEffect(() => {

@@ -42,7 +42,7 @@ export const useSoundStore = create<SoundState>()(
         const state = get();
         if (state.activeSound === soundType && state.isPlaying) {
           audioManager.stopSound(soundType);
-          set({ isPlaying: false, activeSound: null });
+          set({ isPlaying: false, activeSound: soundType });
         } else {
           if (state.activeSound && state.activeSound !== soundType) {
             audioManager.stopSound(state.activeSound);

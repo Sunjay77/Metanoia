@@ -19,6 +19,7 @@ interface PomodoroStore {
   timeLeft: number; // in seconds
   isWorkSession: boolean;
   sessionsCompleted: number;
+  lastTick: number | null; // timestamp in ms
 
   // Session history
   sessions: PomodoroSession[];
@@ -33,6 +34,7 @@ interface PomodoroStore {
   resumeSession: () => void;
   resetSession: () => void;
   decrementTimeLeft: () => void;
+  syncTimeLeft: () => void;
   completeSession: () => void;
   startBreak: () => void;
 }
@@ -49,6 +51,7 @@ export const usePomodoro = create<PomodoroStore>()(
       isWorkSession: true,
       sessionsCompleted: 0,
       sessions: [],
+      lastTick: null,
 
       setWorkDuration: (duration: number) => {
         const state = get();
@@ -73,15 +76,15 @@ export const usePomodoro = create<PomodoroStore>()(
       },
 
       startSession: () => {
-        set({ isRunning: true });
+        set({ isRunning: true, lastTick: Date.now() });
       },
 
       pauseSession: () => {
-        set({ isRunning: false });
+        set({ isRunning: false, lastTick: null });
       },
 
       resumeSession: () => {
-        set({ isRunning: true });
+        set({ isRunning: true, lastTick: Date.now() });
       },
 
       resetSession: () => {
@@ -90,19 +93,29 @@ export const usePomodoro = create<PomodoroStore>()(
           isRunning: false,
           timeLeft: workDuration * 60,
           isWorkSession: true,
+          lastTick: null,
         });
       },
 
       decrementTimeLeft: () => {
         const state = get();
         if (state.isRunning) {
-          const newTimeLeft = state.timeLeft - 1;
+          const now = Date.now();
+          const lastTick = state.lastTick ?? now;
+          const elapsedSeconds = Math.floor((now - lastTick) / 1000);
+
+          if (elapsedSeconds <= 0) {
+            return;
+          }
+
+          const newTimeLeft = state.timeLeft - elapsedSeconds;
 
           if (newTimeLeft <= 0) {
             // Session completed
             set({
               isRunning: false,
               timeLeft: 0,
+              lastTick: null,
             });
 
             if (state.isWorkSession) {
@@ -119,8 +132,48 @@ export const usePomodoro = create<PomodoroStore>()(
               });
             }
           } else {
-            set({ timeLeft: newTimeLeft });
+            set({ timeLeft: newTimeLeft, lastTick: now });
           }
+        }
+      },
+
+      syncTimeLeft: () => {
+        const state = get();
+        if (!state.isRunning) {
+          return;
+        }
+
+        const now = Date.now();
+        const lastTick = state.lastTick ?? now;
+        const elapsedSeconds = Math.floor((now - lastTick) / 1000);
+
+        if (elapsedSeconds <= 0) {
+          return;
+        }
+
+        const newTimeLeft = state.timeLeft - elapsedSeconds;
+        if (newTimeLeft <= 0) {
+          set({
+            isRunning: false,
+            timeLeft: 0,
+            lastTick: null,
+          });
+
+          if (state.isWorkSession) {
+            set({
+              sessionsCompleted: state.sessionsCompleted + 1,
+              sessions: [
+                ...state.sessions,
+                {
+                  id: Date.now(),
+                  duration: state.workDuration,
+                  completedAt: new Date().toISOString(),
+                },
+              ],
+            });
+          }
+        } else {
+          set({ timeLeft: newTimeLeft, lastTick: now });
         }
       },
 
@@ -139,7 +192,7 @@ export const usePomodoro = create<PomodoroStore>()(
             ],
           });
         }
-        set({ isRunning: false });
+        set({ isRunning: false, lastTick: null });
       },
 
       startBreak: () => {
@@ -148,6 +201,7 @@ export const usePomodoro = create<PomodoroStore>()(
           isWorkSession: false,
           timeLeft: breakDuration * 60,
           isRunning: true,
+          lastTick: Date.now(),
         });
       },
     }),
