@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { audioManager } from "@/utils/audioManager";
+import { useEffect} from "react";
+import { useSoundStore } from "@/store/sounds/soundStore";
 import "./Landing.css";
 
 interface LandingProps {
@@ -13,17 +13,14 @@ export function Landing({
   onBrainDumpSelect,
   onPomodoroSelect,
 }: LandingProps) {
-  const [isPlayingBrownNoise, setIsPlayingBrownNoise] = useState(false);
+  const { isPlaying, activeSound, volume, togglePlay, setVolume } =
+    useSoundStore();
 
-  const handleBrownNoiseToggle = () => {
-    if (isPlayingBrownNoise) {
-      audioManager.stopBrownNoise();
-      setIsPlayingBrownNoise(false);
-    } else {
-      audioManager.playBrownNoise(40); // 40% volume for better ambient
-      setIsPlayingBrownNoise(true);
-    }
-  };
+  const brownNoiseSelected = activeSound === "brown-noise";
+  const brownNoisePlaying = brownNoiseSelected && isPlaying;
+
+  useEffect(() => {
+  }, []);
   return (
     <div className="app">
       <header className="app-header">
@@ -49,15 +46,28 @@ export function Landing({
               <div className="mode-icon">⏲</div>
             </button>
 
-            <button
-              className={`mode-card mode-square mode-sound ${isPlayingBrownNoise ? "active" : ""}`}
-              onClick={handleBrownNoiseToggle}
-              title={isPlayingBrownNoise ? "Stop brown noise" : "Play brown noise"}
-            >
-              <div className="mode-icon">
-                {isPlayingBrownNoise ? "⏸" : "▶"}
+            <div className="mode-sound-group">
+              <button
+                className={`mode-card mode-square mode-sound ${brownNoisePlaying ? "active" : ""}`}
+                onClick={() => togglePlay("brown-noise")}
+                title={brownNoisePlaying ? "Stop brown noise" : "Play brown noise"}
+              >
+                <div className="mode-icon">
+                  {brownNoisePlaying ? "⏸" : "▶"}
+                </div>
+              </button>
+              <div className={`mode-sound-volume ${brownNoiseSelected ? "" : "mode-sound-volume-idle"}`}>
+                <input
+                  className="mode-sound-slider"
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={volume}
+                  onChange={(event) => setVolume(Number(event.target.value))}
+                />
+                <span className="mode-sound-value">{volume}%</span>
               </div>
-            </button>
+            </div>
           </div>
         </div>
       </main>

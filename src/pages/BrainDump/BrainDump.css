@@ -203,8 +203,9 @@
   }
 
   .unstructured-input {
-    min-height: 120px;
+    min-height: 60vh;
     font-size: 0.95rem;
+    max-height: none;
   }
 
   .save-note-btn {

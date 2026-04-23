@@ -11,6 +11,10 @@ export class NotificationManager {
     return (window as any).cordova?.plugins?.notification?.local;
   }
 
+  private getCordovaPermissions() {
+    return (window as any).cordova?.plugins?.permissions;
+  }
+
   async initialize(): Promise<void> {
     console.log("Initializing NotificationManager...");
     console.log("Is Cordova:", this.isCordova);
@@ -24,6 +28,15 @@ export class NotificationManager {
         if (notification && notification.requestPermission) {
           notification.requestPermission();
           console.log("Cordova notification permission requested");
+        }
+
+        const permissions = this.getCordovaPermissions();
+        if (permissions && permissions.POST_NOTIFICATIONS) {
+          permissions.requestPermission(
+            permissions.POST_NOTIFICATIONS,
+            () => console.log("POST_NOTIFICATIONS granted"),
+            () => console.log("POST_NOTIFICATIONS denied"),
+          );
         }
       } catch (error) {
         console.log("Cordova initialization error:", error);
@@ -133,7 +146,17 @@ export class NotificationManager {
           notification.requestPermission();
           return true;
         }
-        return true; // Assume granted for Cordova
+        const permissions = this.getCordovaPermissions();
+        if (permissions && permissions.POST_NOTIFICATIONS) {
+          return new Promise((resolve) => {
+            permissions.requestPermission(
+              permissions.POST_NOTIFICATIONS,
+              () => resolve(true),
+              () => resolve(false),
+            );
+          });
+        }
+        return true; // Assume granted if permissions plugin unavailable
       } else if (this.isCapacitor) {
         console.log("Requesting Capacitor notification permissions...");
         const result = await LocalNotifications.requestPermissions();

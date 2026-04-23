@@ -39,22 +39,39 @@ export function Sounds({
             </div>
             <h3>Brown Noise</h3>
             <p>Deep, ambient sound for focus</p>
-            <button
-              className={`sound-play-btn ${activeSound === "brown-noise" && isPlaying ? "playing" : ""}`}
-              onClick={() => togglePlay("brown-noise")}
-            >
-              {activeSound === "brown-noise" && isPlaying ? (
-                <>
-                  <span className="btn-icon">⏸</span>
-                  <span>Pause</span>
-                </>
-              ) : (
-                <>
-                  <span className="btn-icon">▶</span>
-                  <span>Play</span>
-                </>
-              )}
-            </button>
+            <div className="sound-controls">
+              <button
+                className={`sound-play-btn ${activeSound === "brown-noise" && isPlaying ? "playing" : ""}`}
+                onClick={() => togglePlay("brown-noise")}
+              >
+                {activeSound === "brown-noise" && isPlaying ? (
+                  <>
+                    <span className="btn-icon">⏸</span>
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="btn-icon">▶</span>
+                    <span>Play</span>
+                  </>
+                )}
+              </button>
+              <div
+                className={`sound-volume ${activeSound === "brown-noise" ? "" : "sound-volume-disabled"}`}
+              >
+                <input
+                  className="sound-volume-slider"
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={volume}
+                  onChange={(event) => setVolume(Number(event.target.value))}
+                  disabled={activeSound !== "brown-noise"}
+                  aria-disabled={activeSound !== "brown-noise"}
+                />
+                <span className="sound-volume-value">{volume}%</span>
+              </div>
+            </div>
           </div>
 
           <div className="sound-card">
