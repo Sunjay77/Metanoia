@@ -1,7 +1,7 @@
 {
   "name": "Metanoia",
   "short_name": "Metanoia",
-  "description": "A productivity app for managing tasks, brain dumps, and time with Pomodoro timer",
+  "description": "A minimal productivity app for tasks and brain dumps",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -1,15 +1,13 @@
 interface BottomNavProps {
-  activeMode: "tasks" | "brain-dump" | "pomodoro";
+  activeMode: "tasks" | "brain-dump";
   onTasksClick: () => void;
   onBrainDumpClick: () => void;
-  onPomodoroClick: () => void;
 }
 
 export function BottomNav({
   activeMode,
   onTasksClick,
   onBrainDumpClick,
-  onPomodoroClick,
 }: BottomNavProps) {
   return (
     <nav className="bottom-nav">
@@ -29,14 +27,6 @@ export function BottomNav({
         >
           <span className="nav-icon">≡</span>
           <span className="nav-label">BRAIN DUMP</span>
-        </button>
-        <button
-          className={`nav-item ${activeMode === "pomodoro" ? "nav-item-active" : ""}`}
-          onClick={onPomodoroClick}
-          title="Pomodoro Timer"
-        >
-          <span className="nav-icon">⏲</span>
-          <span className="nav-label">POMODORO</span>
         </button>
       </div>
     </nav>

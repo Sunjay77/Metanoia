@@ -7,14 +7,12 @@ interface SavedBrainDumpsProps {
   onBackClick: () => void;
   onTasksClick: () => void;
   onBrainDumpClick: () => void;
-  onPomodoroClick: () => void;
 }
 
 export function SavedBrainDumps({
   onBackClick,
   onTasksClick,
   onBrainDumpClick,
-  onPomodoroClick,
 }: SavedBrainDumpsProps) {
   const { notes, removeNote } = useBrainDumpStore();
 
@@ -85,7 +83,6 @@ export function SavedBrainDumps({
         activeMode="brain-dump"
         onTasksClick={onTasksClick}
         onBrainDumpClick={onBrainDumpClick}
-        onPomodoroClick={onPomodoroClick}
       />
     </div>
   );

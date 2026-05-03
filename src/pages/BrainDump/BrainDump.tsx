@@ -8,14 +8,12 @@ interface BrainDumpProps {
   onBackClick: () => void;
   onSavedNotesClick: () => void;
   onTasksClick: () => void;
-  onPomodoroClick: () => void;
 }
 
 export function BrainDump({
   onBackClick,
   onSavedNotesClick,
   onTasksClick,
-  onPomodoroClick,
 }: BrainDumpProps) {
   const [inputValue, setInputValue] = useState("");
   const { addNote } = useBrainDumpStore();
@@ -57,7 +55,6 @@ export function BrainDump({
         activeMode="brain-dump"
         onTasksClick={onTasksClick}
         onBrainDumpClick={() => {}}
-        onPomodoroClick={onPomodoroClick}
       />
     </div>
   );

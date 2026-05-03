@@ -180,65 +180,6 @@
   border-color: var(--primary);
 }
 
-.mode-square.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: pulse-sound 2s infinite;
-}
-
-.mode-square.active .mode-icon {
-  color: white;
-}
-
-@keyframes pulse-sound {
-  0%, 100% {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  50% {
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-  }
-}
-
-.utility-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
-  background: var(--surface-container-low);
-  border: 1px solid var(--outline-variant);
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.5rem;
-  transition: var(--transition);
-  width: 48px;
-  height: 48px;
-}
-
-.utility-btn:hover {
-  background: var(--surface-container-high);
-  border-color: var(--primary);
-}
-
-.utility-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.brown-noise-btn.active {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-  50% {
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
-  }
-}
-
 /* Mode Cards - All unified styling */
 
 @media (max-width: 640px) {
@@ -276,9 +217,3 @@
     padding: 0 1rem;
   }
 }
-
-.mode-sound-slider{
-  width: 100%;
-  padding: .625rem;
-}
-
